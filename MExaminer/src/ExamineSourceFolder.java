@@ -52,12 +52,20 @@ public class ExamineSourceFolder {
 		
 		//System.out.println("Location:" + manifestFileLocation);
 		
+		// ?? Get permissions from the file, or should we rely on another script for this ?
 		
 		
 		
+		// Get the `M' checks in the source code
 		
+		
+		// ContextCompat.checkSelfPermission
+		// ActivityCompat.shouldShowRequestPermissionRationale
+		// ActivityCompat.requestPermissions
+		// onRequestPermissionsResult
 		
 	}
+	
 	
 	
 	
