@@ -5,16 +5,24 @@
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+
 public class ExamineSourceFolder {
 	
 	private String dbLocation;	// Location of DB File
 	private String folderName;	// Location of folder being examined
 	private String primaryFolderPath; // Location of all the files to be examined
-		
+	
+	private List<String> javaFiles = new ArrayList<String>(); // All java files
+	private List<String> keyJavaFiles = new ArrayList<String>(); // Only examine the files we actually care about 
+
+	util u = new util();
 
 	// Just get the name of the folder being examined
 	public String getFolderName() {
-		return folderName + "dan";
+		return folderName;
 	}
 
 	// Get the total path of the folder being examined
@@ -35,10 +43,11 @@ public class ExamineSourceFolder {
 		
 		
 		// Get information from the manifest file
-		examineManifestFile();
+//		examineManifestFile();
 		
 		// Examine the entire contents of the app for the specific messages that we are looking for
-		
+	
+		examineSourceCode(getEntireFolderLocation());
 		
 	}
 	
@@ -58,7 +67,8 @@ public class ExamineSourceFolder {
 		
 		// Get the `M' checks in the source code
 		
-		
+		// https://developer.android.com/training/permissions/best-practices.html
+		// https://developer.android.com/training/permissions/requesting.html
 		// ContextCompat.checkSelfPermission
 		// ActivityCompat.shouldShowRequestPermissionRationale
 		// ActivityCompat.requestPermissions
@@ -135,9 +145,6 @@ public class ExamineSourceFolder {
 	
 	
 	
-	
-	
-	
 	// Determine if the application is targeted toward `M'
 	private boolean isAppM(String folderLocation){
 		//		Not sure how this will be done yet
@@ -149,6 +156,84 @@ public class ExamineSourceFolder {
 	// Parse the manifest file to find relevant information about it
 	//		See if 
 	
+	
+	// Perform the operations to the source code
+	private void examineSourceCode(String folderLocation){
+		
+		// Put all the different modules I will be examining in here
+		
+		System.out.println("Examine folder");
+		
+		// Loop through every .java file
+		//	Could put this into components, but the goal should probably be to keep things all in a single loop to save resources
+		
+	
+		
+		File[] files = new File(folderLocation).listFiles();
+	    buildJavaFiles(files);
+		
+	    // test showing java files
+	    for(int i =0; i<javaFiles.size(); i++){
+	 //   	System.out.println(javaFiles.get(i));
+//	    	File files = new File(javaFileLocation)
+	    	if(isJavaItemWorthExamining(new File(javaFiles.get(i)))){
+		    	// Build list of key java files
+	    		keyJavaFiles.add(javaFiles.get(i));  // Build the list of files we care about. These can be examined later
+		    }
+	    }
+	      
+	    
+	    
+	    
+	    // Clear the list of java files when done?
+	    
+		
+	}
+	
+	
+	
+	// Check to see if the file contains any relevant information to examine
+	private boolean isJavaItemWorthExamining(File javaFile){
+		
+		// Build a list of key terms/items to search for
+		
+		
+	
+		// check to see if the file contains anything in this string
+		try {
+			System.out.println(u.getContentsofFile(javaFile));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		//System.out.println("191"+javaFileLocation);
+		return false;
+	}
+	
+	
+
+	// Create the list of all the java files in the target directory
+	private void buildJavaFiles(File[] files) {
+	    for (File file : files) {
+	        if (file.isDirectory()) {
+	          //  System.out.println("Directory: " + file.getName());
+	        	buildJavaFiles(file.listFiles()); // Calls same method again.
+	        } else {
+	            if(file.getName().contains(".java")){
+	            	//System.out.println(file.getName());
+	            	try {
+						javaFiles.add(file.getCanonicalPath());
+					} catch (IOException e) {
+						// TODO: probably also log the issue
+						e.printStackTrace();
+					}
+	            	
+	            }
+	        }
+	    }
+	}
 	
 
 }
