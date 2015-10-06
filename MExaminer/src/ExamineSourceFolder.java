@@ -162,7 +162,7 @@ public class ExamineSourceFolder {
 		
 		// Put all the different modules I will be examining in here
 		
-		System.out.println("Examine folder");
+	//	System.out.println("Examine folder");
 		
 		// Loop through every .java file
 		//	Could put this into components, but the goal should probably be to keep things all in a single loop to save resources
@@ -176,10 +176,11 @@ public class ExamineSourceFolder {
 	    for(int i =0; i<javaFiles.size(); i++){
 	 //   	System.out.println(javaFiles.get(i));
 //	    	File files = new File(javaFileLocation)
-	    	if(isJavaItemWorthExamining(new File(javaFiles.get(i)))){
+	    	if(isFileContainsMFunctionality(new File(javaFiles.get(i)))){
 		    	// Build list of key java files
 	    		keyJavaFiles.add(javaFiles.get(i));  // Build the list of files we care about. These can be examined later
-		    }
+	    		System.out.println("add " + javaFiles.get(i));
+	    	}
 	    }
 	      
 	    
@@ -192,24 +193,33 @@ public class ExamineSourceFolder {
 	
 	
 	
-	// Check to see if the file contains any relevant information to examine
-	private boolean isJavaItemWorthExamining(File javaFile){
-		
-		// Build a list of key terms/items to search for
-		
-		
-	
-		// check to see if the file contains anything in this string
+	// Check to see if one of the keywords are contained in the file.
+	//		This will merely create a list for analyzing later
+	private boolean isFileContainsMFunctionality(File inputFile){
+
+		String strInputFile = "";
 		try {
-			System.out.println(u.getContentsofFile(javaFile));
+			strInputFile = u.getContentsofFile(inputFile);
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		boolean retVal = false;
 		
+		List<String> keyWords = new ArrayList<String>(); // AndroidM Keywords to search for
+		keyWords.add("a");
+		keyWords.add("ActivityCompat");
+		keyWords.add("hahaahaha1hahahah");
 		
-		//System.out.println("191"+javaFileLocation);
-		return false;
+		int i=0;
+		while(i<keyWords.size() && retVal == false){
+			if(strInputFile.toLowerCase().contains(keyWords.get(i).toLowerCase().toString())){
+				retVal=true;
+			}
+			i++;
+		}
+				
+		return retVal;
 	}
 	
 	

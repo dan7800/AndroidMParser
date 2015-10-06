@@ -1,5 +1,6 @@
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
@@ -32,53 +33,42 @@ public class Dummy {
 		
 		//System.out.println(u.getContentsofFile(javaFile));
 		
+		System.out.println(isFileContainsMFunctionality(javaFile));
 		
-		isFfileContainsMFunctionality(u.getContentsofFile(javaFile));
 		
 		
 			}
 	
-	// Check to see if one of the keywords are contained in the file
-	private void isFfileContainsMFunctionality(String str){
-		//System.out.println(str);
-		/*
-	    String[] words = {"log", "Log", "word3", "word4", "word5"};  
-	    //return (Arrays.asList(words).contains(str));
-	    if (Arrays.asList(str).contains(str)){
-	    	System.out.println("yes");
-	    }else{
-	    	System.out.println("no");
-	    }
-	    */
-	//	System.out.printf("Matches - [%s]%n", str.contains("^.*?(log|Log|item3).*$"));
-		
-		
+	
+	
+	
+	// Check to see if one of the keywords are contained in the file.
+	//		This will merely create a list for analyzing later
+	private boolean isFileContainsMFunctionality(File inputFile){
+
+		String strInputFile = "";
+		try {
+			strInputFile = u.getContentsofFile(inputFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		boolean retVal = false;
 		
+		List<String> keyWords = new ArrayList<String>(); // AndroidM Keywords to search for
+		keyWords.add("hahaahaha1hahahah");
+		keyWords.add("ActivityCompat");
+		keyWords.add("hahaahaha1hahahah");
 		
-		List<String> s = Arrays.asList("BAasdfasdfB", ".show()", "asdfasfasDAS");
-
-			
-		for(int i=0; i<s.size(); i++){
-			if(str.toLowerCase().contains(s.get(i))){
+		int i=0;
+		while(i<keyWords.size() && retVal == false){
+			if(strInputFile.toLowerCase().contains(keyWords.get(i).toLowerCase().toString())){
 				retVal=true;
-				System.out.println("true!");	
-			}else{
-				System.out.println("false");
 			}
+			i++;
 		}
-		
-		System.out.println("RetVal=" + retVal);
-		
-		//System.out.println(str.toLowerCase().contains(".show()")); // true
-		
-		// only loop through the file if reVal is false
-		
-		
-		
-		
-		
-		
+				
+		return retVal;
 	}
 	
 	

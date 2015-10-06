@@ -16,7 +16,7 @@ public class ExaminerSupervisor {
 	//private final String SourceCodeLocation = "../exampleApps/";	// Where are the APK source is located to be examined
 	
 	// For windows
-	private final String SourceCodeLocation = "E:\\GIT\\GHResearch\\AndroidMParser\\exampleApps\\";	// Where are the APK source is located to be examined
+	private final String SourceCodeLocation = "E:\\GIT\\GHResearch\\AndroidMParser\\exampleApps_smallDummy\\";	// Where are the APK source is located to be examined
 	
 	private final String DBLocation = "DUMMYDBLOCATION";
 
