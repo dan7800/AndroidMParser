@@ -18,6 +18,12 @@ public class ExamineSourceFolder {
 	private List<String> javaFiles = new ArrayList<String>(); // All java files
 	private List<String> keyJavaFiles = new ArrayList<String>(); // Only examine the files we actually care about 
 
+	
+	private List<String> MkeyWords = new ArrayList<String>(); // AndroidM Keywords to search for
+	
+	
+	
+	
 	util u = new util();
 
 	// Just get the name of the folder being examined
@@ -34,6 +40,21 @@ public class ExamineSourceFolder {
 		this.dbLocation = dbLocation;
 		this.primaryFolderPath = primaryFolderPath;
 		this.folderName = folderName;
+		buildMKeyWords();
+	}
+	
+	
+	// Create a common set of `M' keywords. 
+	// This will likely be used several times
+	private void buildMKeyWords(){
+		MkeyWords.add("checkSelfPermission(");
+		MkeyWords.add("requestPermissions(");
+		MkeyWords.add("shouldShowRequestPermissionRationale(");
+				
+		
+		//MkeyWords.add("ActivityCompat."); // I believe this is the main generic class for M permissions?
+		
+
 	}
 	
 	
@@ -43,16 +64,57 @@ public class ExamineSourceFolder {
 		
 		
 		// Get information from the manifest file
+		// This still neesd to be completed
 //		examineManifestFile();
 		
 		// Examine the entire contents of the app for the specific messages that we are looking for
+		examineSourceCode(getEntireFolderLocation()); // This will build a list of M related files
+				
+		// Now for each of the files in identified list, start gathering information on them
+		examineMFiles();
+	}
 	
-		examineSourceCode(getEntireFolderLocation());
+		
+	// Examine the files identified as being "M"
+	// I broke this down into several steps in the hope that it would make things faster
+	private void examineMFiles(){
+		
+		// Loop through all of the key files
+		for(int i=0; i<keyJavaFiles.size(); i++){
+			//System.out.println(keyJavaFiles.get(i).toString());
+			// This is where specific rule checks go
+			
+			
+			// Files might have many "M" commands
+			// Loop through the master M list?
+			
+			
+			
+		}
 		
 	}
 	
 	
 	
+	// Check to see if a file contains a specific command
+	private boolean isFileContainString(File inputFile, String checkString){
+		try {
+			final String strInputFile = u.getContentsofFile(inputFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		if(strInputFile.){
+			
+		}
+		
+		
+		return true;
+	} 
+	
+	
+	/*
 	private void examineManifestFile(){
 		String manifestFileLocation = getManifestFileLocation(getEntireFolderLocation()); // Where is the manifest file located
 	
@@ -75,7 +137,7 @@ public class ExamineSourceFolder {
 		// onRequestPermissionsResult
 		
 	}
-	
+	*/
 	
 	
 	
@@ -127,12 +189,8 @@ public class ExamineSourceFolder {
 			  				 }
 				  		}  
 			      }
-		
 		}
 		
-		
-		
-		//
 		return retVal;
 	}
 	
@@ -147,14 +205,12 @@ public class ExamineSourceFolder {
 	
 	// Determine if the application is targeted toward `M'
 	private boolean isAppM(String folderLocation){
-		//		Not sure how this will be done yet
+		//		Not sure how this will be done yet.
+		//		Hopefully we can do it through 
 		return false;
 	}
 	
 	
-	
-	// Parse the manifest file to find relevant information about it
-	//		See if 
 	
 	
 	// Perform the operations to the source code
@@ -179,7 +235,7 @@ public class ExamineSourceFolder {
 	    	if(isFileContainsMFunctionality(new File(javaFiles.get(i)))){
 		    	// Build list of key java files
 	    		keyJavaFiles.add(javaFiles.get(i));  // Build the list of files we care about. These can be examined later
-	    		System.out.println("add " + javaFiles.get(i));
+	    		//System.out.println("add " + javaFiles.get(i));
 	    	}
 	    }
 	      
@@ -206,14 +262,9 @@ public class ExamineSourceFolder {
 		}
 		boolean retVal = false;
 		
-		List<String> keyWords = new ArrayList<String>(); // AndroidM Keywords to search for
-		keyWords.add("a");
-		keyWords.add("ActivityCompat");
-		keyWords.add("hahaahaha1hahahah");
-		
 		int i=0;
-		while(i<keyWords.size() && retVal == false){
-			if(strInputFile.toLowerCase().contains(keyWords.get(i).toLowerCase().toString())){
+		while(i<MkeyWords.size() && retVal == false){
+			if(strInputFile.toLowerCase().contains(MkeyWords.get(i).toLowerCase().toString())){
 				retVal=true;
 			}
 			i++;
@@ -239,7 +290,6 @@ public class ExamineSourceFolder {
 						// TODO: probably also log the issue
 						e.printStackTrace();
 					}
-	            	
 	            }
 	        }
 	    }

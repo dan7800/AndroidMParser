@@ -51,6 +51,3 @@ import com.example.android.common.logger.Log;
         }
         // END_INCLUDE(contacts_permission_request)
     }
-
-
-hahaahahahahahah   
