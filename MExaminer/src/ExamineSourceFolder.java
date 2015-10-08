@@ -47,9 +47,9 @@ public class ExamineSourceFolder {
 	// Create a common set of `M' keywords. 
 	// This will likely be used several times
 	private void buildMKeyWords(){
-		MkeyWords.add("checkSelfPermission(");
-		MkeyWords.add("requestPermissions(");
-		MkeyWords.add("shouldShowRequestPermissionRationale(");
+		MkeyWords.add("checkSelfPermission");
+		MkeyWords.add("requestPermissions");
+		MkeyWords.add("shouldShowRequestPermissionRationale");
 				
 		
 		//MkeyWords.add("ActivityCompat."); // I believe this is the main generic class for M permissions?
@@ -86,7 +86,19 @@ public class ExamineSourceFolder {
 			
 			
 			// Files might have many "M" commands
-			// Loop through the master M list?
+			// Loop through the master M list
+			for(int x=0; x<MkeyWords.size();x++){
+				//System.out.println("check to see if " + keyJavaFiles.get(i)  + " contains: " + MkeyWords.get(x));
+				
+				
+				// Record that the file contains the item
+				
+				
+				// Send it out to investigate the exact items in the file
+				
+				
+			
+			}
 			
 			
 			
@@ -95,7 +107,7 @@ public class ExamineSourceFolder {
 	}
 	
 	
-	
+	/*
 	// Check to see if a file contains a specific command
 	private boolean isFileContainString(File inputFile, String checkString){
 		try {
@@ -105,14 +117,14 @@ public class ExamineSourceFolder {
 			e.printStackTrace();
 		}
 		
-		if(strInputFile.){
+		//if(strInputFile.){
 			
-		}
+		//}
 		
 		
 		return true;
 	} 
-	
+	*/
 	
 	/*
 	private void examineManifestFile(){
