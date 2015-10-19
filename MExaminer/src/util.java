@@ -1,5 +1,4 @@
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -9,35 +8,9 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.logging.FileHandler;
-import java.util.logging.LogManager;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import java.util.logging.XMLFormatter;
 
 
 public class util {
-/*
-	public String readDoc(String inputFile) throws IOException {
-		BufferedReader br = new BufferedReader(new FileReader(inputFile));
-		StringBuilder text = new StringBuilder();
-        String line = "";
-        try{
-        	line = br.readLine();
-	
-        	while(line != null){
-        		text.append(line);
-        		text.append("\n"); //added this line to fix comparision problem
-        		line = br.readLine();
-        	}
-        }catch (Exception e){
-        	e.printStackTrace();
-        }finally{
-        	br.close();
-        	}
-        return text.toString();
-	}
-	*/
 	
 	public String getContentsofFile(File inputFile) throws IOException{
 		  int len;

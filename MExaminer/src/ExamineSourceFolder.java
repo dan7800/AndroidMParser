@@ -64,7 +64,7 @@ public class ExamineSourceFolder {
 		
 		// Put this into a log file
 		System.out.println("Examine folder: " + getEntireFolderLocation());
-	u.updateLog(masterLogFileLocation, "test", "Examine folder: " + getEntireFolderLocation(), true);
+		u.updateLog(masterLogFileLocation, "ExamineFolder", "Examine folder: " + getEntireFolderLocation(), true);
 		
 		
 		// Get information from the manifest file
@@ -83,6 +83,49 @@ public class ExamineSourceFolder {
 	// I broke this down into several steps in the hope that it would make things faster
 	private void examineMFiles(){
 		
+		// Record that the file contains the item
+		
+		
+		// Send it out to investigate the exact items in the file
+		
+		
+		// 1) Get the contents of a file and load it into a local string
+		// 2) Examine that string to see if it contains keywords (case?)
+		// 3) If the Keyword is found, then send it to the specific function for further analysis
+		
+		
+		// Load file contents to string
+		
+		String fileContents = "";
+		for(int i=0; i<keyJavaFiles.size(); i++){
+			//System.out.println("String: " + keyJavaFiles.get(i));
+			//File folder = new File(folderLocation);
+			try {
+				fileContents = u.getContentsofFile(new File(keyJavaFiles.get(i)));
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			
+			System.out.println(fileContents);
+			
+		}
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		/*
 		// Loop through all of the key files
 		for(int i=0; i<keyJavaFiles.size(); i++){
 			//System.out.println(keyJavaFiles.get(i).toString());
@@ -101,13 +144,23 @@ public class ExamineSourceFolder {
 				// Send it out to investigate the exact items in the file
 				
 				
+				// 1) Get the contents of a file and load it into a local string
+				// 2) Examine that string to see if it contains keywords (case?)
+				// 3) If the Keyword is found, then send it to the specific function for further analysis
+				
+				
+				// Load file contents to string
+				System.out.println("String: " + keyJavaFiles.get(i));
+				
+				
+				
 			
 			}
 			
 			
 			
 		}
-		
+		*/
 	}
 	
 	
@@ -255,12 +308,11 @@ public class ExamineSourceFolder {
 	    	}
 	    }
 	      
-	    
-	    
-	    
+
 	    // Clear the list of java files when done?
 	    
 		
+	    // Now cycle through all the M Files and h
 	}
 	
 	
