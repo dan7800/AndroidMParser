@@ -11,6 +11,7 @@ import java.io.File;
 public class ExaminerSupervisor {
 	
 	private final String apkLocation = "";	// Where are the apks to be examined
+	private final String masterLogFileLocation = "E:\\GIT\\GHResearch\\AndroidMParser\\Logs\\";
 	
 	// For mac
 	//private final String SourceCodeLocation = "../exampleApps/";	// Where are the APK source is located to be examined
@@ -30,6 +31,11 @@ public class ExaminerSupervisor {
 	
 	private void Run(){
 	
+		// Create the log location if it does not exist
+		new File(masterLogFileLocation).mkdir();
+		
+		
+	
 		// Loop through all source files
 		File folder = new File(SourceCodeLocation);
 		File[] listOfFiles = folder.listFiles();
@@ -37,7 +43,7 @@ public class ExaminerSupervisor {
 		for (int i = 0; i < listOfFiles.length; i++) {
 			if (listOfFiles[i].isDirectory()) {
 			//	System.out.println("examine " + listOfFiles[i].getName());  
-				ExamineSourceFolder es = new ExamineSourceFolder(DBLocation, SourceCodeLocation, listOfFiles[i].getName());
+				ExamineSourceFolder es = new ExamineSourceFolder(masterLogFileLocation, DBLocation, SourceCodeLocation, listOfFiles[i].getName());
 				es.examineFolder();
 				//System.out.println(es.getFolderLocation());
 		    }

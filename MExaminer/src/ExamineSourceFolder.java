@@ -17,7 +17,7 @@ public class ExamineSourceFolder {
 	
 	private List<String> javaFiles = new ArrayList<String>(); // All java files
 	private List<String> keyJavaFiles = new ArrayList<String>(); // Only examine the files we actually care about 
-
+	private String masterLogFileLocation;
 	
 	private List<String> MkeyWords = new ArrayList<String>(); // AndroidM Keywords to search for
 	
@@ -36,10 +36,11 @@ public class ExamineSourceFolder {
 		return primaryFolderPath + folderName;
 	}
 
-	public ExamineSourceFolder(String dbLocation, String primaryFolderPath, String folderName) {
+	public ExamineSourceFolder(String MasterLogFileLocation, String dbLocation, String primaryFolderPath, String folderName) {
 		this.dbLocation = dbLocation;
 		this.primaryFolderPath = primaryFolderPath;
 		this.folderName = folderName;
+		this.masterLogFileLocation = MasterLogFileLocation;
 		buildMKeyWords();
 	}
 	
@@ -60,7 +61,10 @@ public class ExamineSourceFolder {
 	
 	public void examineFolder(){
 		//System.out.println("examine folder" + this.folderName);
-		System.out.println("examine folder" + getEntireFolderLocation());
+		
+		// Put this into a log file
+		System.out.println("Examine folder: " + getEntireFolderLocation());
+	u.updateLog(masterLogFileLocation, "test", "Examine folder: " + getEntireFolderLocation(), true);
 		
 		
 		// Get information from the manifest file
