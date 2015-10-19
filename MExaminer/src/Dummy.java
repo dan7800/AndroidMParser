@@ -7,7 +7,7 @@ import java.util.Scanner;
 
 
 // Just a dummy, scratch pad for file analysis
-
+// Test commit
 
 public class Dummy {
 
