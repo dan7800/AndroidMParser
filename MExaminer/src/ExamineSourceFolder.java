@@ -108,7 +108,23 @@ public class ExamineSourceFolder {
 			}
 			
 			
-			System.out.println(fileContents);
+			// TURN THIS INTO A CASE STATMENT
+			// LIKELY FASTER
+			
+			//System.out.println(fileContents);
+			if(isContainsShouldShowRequestPermissionRationale(fileContents)){
+				System.out.println("Yes - " + keyJavaFiles.get(i));
+			}else{
+				System.out.println("NO - " + keyJavaFiles.get(i));
+			}
+			
+			// Now that we have the file contents, check to see if the specific search criteria is all set.
+			
+			
+			
+			
+			
+			
 			
 		}
 		
@@ -210,6 +226,30 @@ public class ExamineSourceFolder {
 	
 	
 	
+	// Check to see if the file contains the specific search criteria
+	private boolean isContainsShouldShowRequestPermissionRationale(String inputFile){
+		boolean retVal=false;
+		if(isContainSearchCriteria("a",inputFile)){
+			retVal=true;
+		}
+			
+		return retVal;
+	}
+	
+	
+	// A more generic, reusable way of searching for criteria in a string
+	private boolean isContainSearchCriteria(String searchCriteria, String inputFile){
+		boolean retVal=false;
+
+		if(searchCriteria.toLowerCase().contains(inputFile.toLowerCase())){
+			retVal = true;
+		}
+				
+		return retVal;
+	}
+	
+	
+	
 	// find the manifest file. Return the location of the manifest file
 	private String getManifestFileLocation(String folderLocation){
 		
@@ -271,13 +311,6 @@ public class ExamineSourceFolder {
 	
 	
 	
-	
-	// Determine if the application is targeted toward `M'
-	private boolean isAppM(String folderLocation){
-		//		Not sure how this will be done yet.
-		//		Hopefully we can do it through 
-		return false;
-	}
 	
 	
 	

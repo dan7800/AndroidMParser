@@ -1,4 +1,5 @@
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -32,43 +33,56 @@ public class Dummy {
 		
 		//System.out.println(u.getContentsofFile(javaFile));
 		
-		System.out.println(isFileContainsMFunctionality(javaFile));
+		File file = new File("E:\\GIT\\GHResearch\\AndroidMParser\\exampleApps_smallDummy\\android-RuntimePermissions\\src\\main\\java\\com\\example\\android\\system\\runtimepermissions\\MainActivity.java");
+		System.out.println(isContainSearchCriteria(file,"example"));
 		
 		
 		
-			}
+		}
 	
-	
-	
-	
-	// Check to see if one of the keywords are contained in the file.
-	//		This will merely create a list for analyzing later
-	private boolean isFileContainsMFunctionality(File inputFile){
+	/*
+	// A more generic, reusable way of searching for criteria in a string
+	private boolean isContainSearchCriteria(String searchCriteria, String inputFile){
+		boolean retVal=false;
+		
+	//	searchCriteria=searchCriteria.toLowerCase(); // Make sure that each are converted to lowercase
+	//	inputFile = inputFile.toLowerCase();
 
-		String strInputFile = "";
-		try {
-			strInputFile = u.getContentsofFile(inputFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		if(searchCriteria.toLowerCase().contains(inputFile.toLowerCase())){
+			retVal = true;
 		}
-		boolean retVal = false;
 		
-		List<String> keyWords = new ArrayList<String>(); // AndroidM Keywords to search for
-		keyWords.add("hahaahaha1hahahah");
-		keyWords.add("ActivityCompat");
-		keyWords.add("hahaahaha1hahahah");
 		
-		int i=0;
-		while(i<keyWords.size() && retVal == false){
-			if(strInputFile.toLowerCase().contains(keyWords.get(i).toLowerCase().toString())){
-				retVal=true;
-			}
-			i++;
-		}
-				
 		return retVal;
 	}
 	
+	*/
 	
+	
+	private  boolean isContainSearchCriteria(File inputFile, String searchCriteria){
+	boolean retVal=false;
+		
+	
+	try {
+	    Scanner scanner = new Scanner(inputFile);
+
+	    //now read the file line by line...
+	    int lineNum = 0;
+	    while (scanner.hasNextLine()) {
+	        String line = scanner.nextLine();
+	        lineNum++;
+	       // if(<some condition is met for the line>) { 
+	       //     System.out.println("ho hum, i found it on line " +lineNum);
+	       // }
+	      //  System.out.println(line);
+	        if(line.toLowerCase().contains(searchCriteria.toLowerCase())){
+	        	retVal =  true;
+	        }
+	    }
+	} catch(FileNotFoundException e) { 
+	    //handle this
+	}
+		return retVal;
+	}
+
 }
