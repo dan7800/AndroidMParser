@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Scanner;
 
 
 public class util {
@@ -76,6 +77,31 @@ public class util {
 
 	}
 	
-	
+	// Check to see if the file you are analyzing contains the specific search critiera
+	public  boolean isFileContainSearchCriteria(File inputFile, String searchCriteria){
+		boolean retVal=false;
+			
+		try {
+		    Scanner scanner = new Scanner(inputFile);
+
+		    //now read the file line by line...
+		    int lineNum = 0;
+		    while (scanner.hasNextLine()) {
+		        String line = scanner.nextLine();
+		        lineNum++;
+		       // if(<some condition is met for the line>) { 
+		       //     System.out.println("ho hum, i found it on line " +lineNum);
+		       // }
+		      //  System.out.println(line);
+		        if(line.toLowerCase().contains(searchCriteria.toLowerCase())){
+		        	retVal =  true;
+		        }
+		    }
+		} catch(FileNotFoundException e) { 
+		    //handle this
+		}
+			return retVal;
+		}
+
 
 }

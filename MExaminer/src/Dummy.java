@@ -34,7 +34,7 @@ public class Dummy {
 		//System.out.println(u.getContentsofFile(javaFile));
 		
 		File file = new File("E:\\GIT\\GHResearch\\AndroidMParser\\exampleApps_smallDummy\\android-RuntimePermissions\\src\\main\\java\\com\\example\\android\\system\\runtimepermissions\\MainActivity.java");
-		System.out.println(isContainSearchCriteria(file,"example"));
+		//System.out.println(isFileContainSearchCriteria(file,"example"));
 		
 		
 		
@@ -59,30 +59,5 @@ public class Dummy {
 	*/
 	
 	
-	private  boolean isContainSearchCriteria(File inputFile, String searchCriteria){
-	boolean retVal=false;
-		
 	
-	try {
-	    Scanner scanner = new Scanner(inputFile);
-
-	    //now read the file line by line...
-	    int lineNum = 0;
-	    while (scanner.hasNextLine()) {
-	        String line = scanner.nextLine();
-	        lineNum++;
-	       // if(<some condition is met for the line>) { 
-	       //     System.out.println("ho hum, i found it on line " +lineNum);
-	       // }
-	      //  System.out.println(line);
-	        if(line.toLowerCase().contains(searchCriteria.toLowerCase())){
-	        	retVal =  true;
-	        }
-	    }
-	} catch(FileNotFoundException e) { 
-	    //handle this
-	}
-		return retVal;
-	}
-
 }

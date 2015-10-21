@@ -94,14 +94,14 @@ public class ExamineSourceFolder {
 		// 3) If the Keyword is found, then send it to the specific function for further analysis
 		
 		
-		// Load file contents to string
+		// Load file contents to string. This might make it faster to examine the file later on
 		
 		String fileContents = "";
 		for(int i=0; i<keyJavaFiles.size(); i++){
 			//System.out.println("String: " + keyJavaFiles.get(i));
-			//File folder = new File(folderLocation);
+			File ExaminedFile = new File(keyJavaFiles.get(i)); // Make a file of the item to be examined
 			try {
-				fileContents = u.getContentsofFile(new File(keyJavaFiles.get(i)));
+				fileContents = u.getContentsofFile(ExaminedFile);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -111,33 +111,14 @@ public class ExamineSourceFolder {
 			// TURN THIS INTO A CASE STATMENT
 			// LIKELY FASTER
 			
-			//System.out.println(fileContents);
-			if(isContainsShouldShowRequestPermissionRationale(fileContents)){
-				System.out.println("Yes - " + keyJavaFiles.get(i));
-			}else{
-				System.out.println("NO - " + keyJavaFiles.get(i));
-			}
+			
+			checkShouldShowRequestPermissionRationale(ExaminedFile);
+			
 			
 			// Now that we have the file contents, check to see if the specific search criteria is all set.
 			
-			
-			
-			
-			
-			
-			
+
 		}
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
@@ -178,6 +159,20 @@ public class ExamineSourceFolder {
 		}
 		*/
 	}
+	
+	
+	// This type of function will be called for all checks
+	private void checkShouldShowRequestPermissionRationale(File ExaminedFile){
+	//System.out.println(fileContents);
+		if(isContainSearchCriteria("shouldShowRequestPermissionRationale",ExaminedFile)){
+			System.out.println("Yes - " + ExaminedFile.getName());
+		}else{
+			System.out.println("NO - " + ExaminedFile.getName());
+		}
+	}
+	
+	
+
 	
 	
 	/*
@@ -226,28 +221,17 @@ public class ExamineSourceFolder {
 	
 	
 	
-	// Check to see if the file contains the specific search criteria
-	private boolean isContainsShouldShowRequestPermissionRationale(String inputFile){
-		boolean retVal=false;
-		if(isContainSearchCriteria("a",inputFile)){
-			retVal=true;
-		}
-			
-		return retVal;
-	}
-	
 	
 	// A more generic, reusable way of searching for criteria in a string
-	private boolean isContainSearchCriteria(String searchCriteria, String inputFile){
+	// This will be used for all checking functions
+	
+	private boolean isContainSearchCriteria(String searchCriteria, File inputFile){
 		boolean retVal=false;
-
-		if(searchCriteria.toLowerCase().contains(inputFile.toLowerCase())){
-			retVal = true;
+		if(u.isFileContainSearchCriteria(inputFile, searchCriteria)){
+			retVal=true;
 		}
-				
 		return retVal;
 	}
-	
 	
 	
 	// find the manifest file. Return the location of the manifest file
