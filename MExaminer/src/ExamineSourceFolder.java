@@ -7,6 +7,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class ExamineSourceFolder {
@@ -74,11 +76,96 @@ public class ExamineSourceFolder {
 		// Examine the entire contents of the app for the specific messages that we are looking for
 		examineSourceCode(getEntireFolderLocation()); // This will build a list of M related files
 				
+		
+		
 		// Now for each of the files in identified list, start gathering information on them
 		examineMFiles();
 	}
 	
+	
+	// Get all the requested permissions in the source code of the app
+	private void getRequestedAllPermissionsInApp(File inputFile){
 		
+		
+		// Put into an extral config file
+		List<String> androidPermissions;
+		
+		androidPermissions.add("Manifest.permission.WRITE_CONTACTS");
+		
+		
+		// Search for Manifest.permission.XXXXX ???
+		
+		
+		// 
+		String str = null;
+		try {
+			str = u.getContentsofFile(inputFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		// Find all instances of permissions list in the file
+		
+		
+		
+		
+		
+		
+		//System.out.println(inputFile.getName());
+		
+		// Build a list of all the items
+		// Put list of items into a DB
+		
+		
+		// AppPermission
+		// Find all instances of "Manifest.Permission."
+
+		//String str = "helloslkhellodjladfjhello";
+		/*
+		String str = null;
+		try {
+			str = u.getContentsofFile(inputFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
+		String findStr = "requestPermissions";
+		int lastIndex = 0;
+		int count = 0;
+
+		while(lastIndex != -1){
+		    lastIndex = str.indexOf(findStr,lastIndex);
+		    if(lastIndex != -1){
+		        count ++;
+		        lastIndex += findStr.length();
+		       // System.out.println(str.substring(str.indexOf(findStr),lastIndex));
+		      // System.out.println(lastIndex);
+		       
+		     //  System.out.println(str.substring(lastIndex,str.length()));
+		       
+		        
+		    }
+		}
+		//System.out.println(count);
+		*/
+		
+		/*
+		String str1 = "helloslkhellodjladfjhello";
+	    Pattern p = Pattern.compile("hello");
+	    Matcher m = p.matcher(str1);
+	    int count = 0;
+	    while (m.find()){
+	    	//count +=1;
+	    	
+	    }
+	    System.out.println(count);
+	    */
+		
+	}
+	
 	// Examine the files identified as being "M"
 	// I broke this down into several steps in the hope that it would make things faster
 	private void examineMFiles(){
@@ -98,8 +185,13 @@ public class ExamineSourceFolder {
 		
 		String fileContents = "";
 		for(int i=0; i<keyJavaFiles.size(); i++){
+			
+				
 			//System.out.println("String: " + keyJavaFiles.get(i));
 			File ExaminedFile = new File(keyJavaFiles.get(i)); // Make a file of the item to be examined
+			// Get all permissions in the files
+			getRequestedAllPermissionsInApp(ExaminedFile);
+			
 			try {
 				fileContents = u.getContentsofFile(ExaminedFile);
 			} catch (IOException e) {
@@ -108,9 +200,6 @@ public class ExamineSourceFolder {
 			}
 			
 			
-			// TURN THIS INTO A CASE STATMENT
-			// LIKELY FASTER
-			
 			
 			checkShouldShowRequestPermissionRationale(ExaminedFile);
 			
@@ -118,6 +207,12 @@ public class ExamineSourceFolder {
 			// Now that we have the file contents, check to see if the specific search criteria is all set.
 			
 
+			// Permissions in Manifest vs. What is in the requested files
+			//	Scan all .Java files for ones which include permissions
+			//		This should come from a list of permissions
+			//		Make sure that this will work
+			
+			
 		}
 		
 		
@@ -166,6 +261,21 @@ public class ExamineSourceFolder {
 	//System.out.println(fileContents);
 		if(isContainSearchCriteria("shouldShowRequestPermissionRationale",ExaminedFile)){
 			System.out.println("Yes - " + ExaminedFile.getName());
+			// Now do stuff with that file
+			
+			// Each the location of each "shouldShowRequestPermissionRationale"
+			// Find the lines below it
+			//		What is the permission that it is trying to request
+			// 		What is the rationale behind the permission?
+			
+			// Find every instance of if (ActivityCompat.shouldShowRequestPermissionRationale(
+			
+			
+			
+			
+			
+			
+						
 		}else{
 			System.out.println("NO - " + ExaminedFile.getName());
 		}
@@ -381,4 +491,9 @@ public class ExamineSourceFolder {
 	}
 	
 
+	// Todo
+	//	Search all the files for "Manifest.permission." .. This will record the permissions the app actually uses
+	//	
+	
+	
 }
