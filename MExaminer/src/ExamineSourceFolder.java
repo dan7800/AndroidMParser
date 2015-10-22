@@ -19,6 +19,9 @@ public class ExamineSourceFolder {
 	
 	private List<String> javaFiles = new ArrayList<String>(); // All java files
 	private List<String> keyJavaFiles = new ArrayList<String>(); // Only examine the files we actually care about 
+	private List<AppPermission> appManifestPerm = new ArrayList<AppPermission>(); // Store the app Manifest Permissions requested by the app
+	
+	
 	private String masterLogFileLocation;
 	
 	private List<String> MkeyWords = new ArrayList<String>(); // AndroidM Keywords to search for
@@ -87,16 +90,10 @@ public class ExamineSourceFolder {
 	private void getRequestedAllPermissionsInApp(File inputFile){
 		
 		
-		// Put into an extral config file
-		List<String> androidPermissions;
 		
-		androidPermissions.add("Manifest.permission.WRITE_CONTACTS");
+		List<String> androidPermissions = null;
 		
 		
-		// Search for Manifest.permission.XXXXX ???
-		
-		
-		// 
 		String str = null;
 		try {
 			str = u.getContentsofFile(inputFile);
@@ -105,6 +102,73 @@ public class ExamineSourceFolder {
 			e.printStackTrace();
 		}
 		
+		
+		String findStr = "Manifest.permission.";
+		int lastIndex = 0;
+		int count = 0;
+
+		while(lastIndex != -1){
+		    lastIndex = str.indexOf(findStr,lastIndex);
+		    if(lastIndex != -1){
+		        count ++;
+		        lastIndex += findStr.length();
+		       // System.out.println(str.substring(str.indexOf(findStr),lastIndex));
+		      // System.out.println(lastIndex);
+		       // Now once the start point is found, find the next occurnce of ")"
+		    //   System.out.println(str.substring(lastIndex,lastIndex+15));
+		        
+		     //  System.out.println(i);
+		     //  System.out.println(str.substring(lastIndex,str.indexOf(")",lastIndex)));
+		        
+		        
+		      
+		       // Now find the line number they appear one
+		       
+//		       str.substring(lastIndex),lastIndex+15))
+		     //  System.out.println(str.substring(lastIndex,str.length()));
+		       
+		  //      private List<AppPermission> appManifestPerm = new ArrayList<AppPermission>(); // Store the app Manifest Permissions requested by the app
+		    	
+		        appManifestPerm.add(new AppPermission(inputFile.getAbsolutePath(),str.substring(lastIndex,str.indexOf(")",lastIndex)),lastIndex));
+		    }
+		}
+
+		
+		// Test cycling through the list appManifestPerm
+		
+		for (int x = 0; x < appManifestPerm.size(); x++) {
+			System.out.println(appManifestPerm.get(x).getAllAppPermissionInfo());
+		}
+		
+		
+		
+	//	androidPermissions.add("Manifest.permission.READ_CONTACTS");
+	//	androidPermissions.add("Manifest.permission.WRITE_CONTACTS");
+		
+		
+		
+		
+		
+		
+		// Find everything from Manifest.permission.XXXX)
+		
+		
+		// requestPermissions(MainActivity.this, PERMISSIONS_CONTACT, REQUEST_CONTACTS);
+		
+		
+		// Search for Manifest.permission.XXXXX ???
+		
+		
+		// 
+		/*
+		String str = null;
+		try {
+			str = u.getContentsofFile(inputFile);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		*/
 		// Find all instances of permissions list in the file
 		
 		

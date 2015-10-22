@@ -35,4 +35,8 @@ public class AppPermission {
 		this.lineNumber = lineNumber;
 	}	
 	
+	public String getAllAppPermissionInfo(){
+		return classPath + " " + permissionName + " " + lineNumber;
+	}
+	
 }

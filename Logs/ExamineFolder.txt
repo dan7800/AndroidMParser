@@ -42,3 +42,16 @@
 2015/10/21 11:45:20 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
 2015/10/21 11:45:30 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
 2015/10/21 11:45:55 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:40:54 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:43:16 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:46:00 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:51:39 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:53:31 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:54:41 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:54:45 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:54:56 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:55:30 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:57:07 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 13:57:32 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 14:13:04 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
+2015/10/21 14:38:09 Examine folder: E:\GIT\GHResearch\AndroidMParser\exampleApps_smallDummy\android-RuntimePermissions
