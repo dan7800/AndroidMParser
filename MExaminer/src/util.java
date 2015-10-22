@@ -13,17 +13,31 @@ import java.util.Scanner;
 
 public class util {
 	
-	public String getContentsofFile(File inputFile) throws IOException{
+	public String getContentsofFile(File inputFile){
 		  int len;
 	      char[] chr = new char[4096];
 	      final StringBuffer buffer = new StringBuffer();
-	      final FileReader reader = new FileReader(inputFile);
+	      FileReader reader = null;
+		try {
+			reader = new FileReader(inputFile);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	      try {
 	          while ((len = reader.read(chr)) > 0) {
 	              buffer.append(chr, 0, len);
 	          }
-	      } finally {
-	          reader.close();
+	      } catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+	          try {
+				reader.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 	      }
 	      return buffer.toString();
 	
@@ -103,5 +117,11 @@ public class util {
 			return retVal;
 		}
 
+	
+	public String findStringBetween(){
+		
+		return "";
+	}
+	
 
 }

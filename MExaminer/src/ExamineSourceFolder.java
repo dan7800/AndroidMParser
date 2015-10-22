@@ -20,6 +20,7 @@ public class ExamineSourceFolder {
 	private List<String> javaFiles = new ArrayList<String>(); // All java files
 	private List<String> keyJavaFiles = new ArrayList<String>(); // Only examine the files we actually care about 
 	private List<AppPermission> appManifestPerm = new ArrayList<AppPermission>(); // Store the app Manifest Permissions requested by the app
+	private List<RationalePermissions> rationalePermissions = new ArrayList<RationalePermissions>(); // Store the app Manifest Permissions requested by the app
 	
 	
 	private String masterLogFileLocation;
@@ -89,20 +90,10 @@ public class ExamineSourceFolder {
 	// Get all the requested permissions in the source code of the app
 	private void getRequestedAllPermissionsInApp(File inputFile){
 		
-		
-		
-		List<String> androidPermissions = null;
-		
-		
 		String str = null;
-		try {
-			str = u.getContentsofFile(inputFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
+		str = u.getContentsofFile(inputFile);
+			
+		// The goal of this is to locate all of the requested permissions in the app
 		String findStr = "Manifest.permission.";
 		int lastIndex = 0;
 		int count = 0;
@@ -112,121 +103,22 @@ public class ExamineSourceFolder {
 		    if(lastIndex != -1){
 		        count ++;
 		        lastIndex += findStr.length();
-		       // System.out.println(str.substring(str.indexOf(findStr),lastIndex));
-		      // System.out.println(lastIndex);
-		       // Now once the start point is found, find the next occurnce of ")"
-		    //   System.out.println(str.substring(lastIndex,lastIndex+15));
-		        
-		     //  System.out.println(i);
-		     //  System.out.println(str.substring(lastIndex,str.indexOf(")",lastIndex)));
-		        
-		        
-		      
-		       // Now find the line number they appear one
-		       
-//		       str.substring(lastIndex),lastIndex+15))
-		     //  System.out.println(str.substring(lastIndex,str.length()));
-		       
-		  //      private List<AppPermission> appManifestPerm = new ArrayList<AppPermission>(); // Store the app Manifest Permissions requested by the app
-		    	
 		        appManifestPerm.add(new AppPermission(inputFile.getAbsolutePath(),str.substring(lastIndex,str.indexOf(")",lastIndex)),lastIndex));
+		        // Instead of creating an object, maybe just add it to the DB here?
 		    }
 		}
 
 		
 		// Test cycling through the list appManifestPerm
-		
+		/*
 		for (int x = 0; x < appManifestPerm.size(); x++) {
 			System.out.println(appManifestPerm.get(x).getAllAppPermissionInfo());
-		}
-		
-		
-		
-	//	androidPermissions.add("Manifest.permission.READ_CONTACTS");
-	//	androidPermissions.add("Manifest.permission.WRITE_CONTACTS");
-		
-		
-		
-		
-		
-		
-		// Find everything from Manifest.permission.XXXX)
-		
-		
-		// requestPermissions(MainActivity.this, PERMISSIONS_CONTACT, REQUEST_CONTACTS);
-		
-		
-		// Search for Manifest.permission.XXXXX ???
-		
-		
-		// 
-		/*
-		String str = null;
-		try {
-			str = u.getContentsofFile(inputFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			// Add all this to a database table
+			// Once it is added to the database table, kill the object
+			
 		}
 		*/
-		// Find all instances of permissions list in the file
 		
-		
-		
-		
-		
-		
-		//System.out.println(inputFile.getName());
-		
-		// Build a list of all the items
-		// Put list of items into a DB
-		
-		
-		// AppPermission
-		// Find all instances of "Manifest.Permission."
-
-		//String str = "helloslkhellodjladfjhello";
-		/*
-		String str = null;
-		try {
-			str = u.getContentsofFile(inputFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		String findStr = "requestPermissions";
-		int lastIndex = 0;
-		int count = 0;
-
-		while(lastIndex != -1){
-		    lastIndex = str.indexOf(findStr,lastIndex);
-		    if(lastIndex != -1){
-		        count ++;
-		        lastIndex += findStr.length();
-		       // System.out.println(str.substring(str.indexOf(findStr),lastIndex));
-		      // System.out.println(lastIndex);
-		       
-		     //  System.out.println(str.substring(lastIndex,str.length()));
-		       
-		        
-		    }
-		}
-		//System.out.println(count);
-		*/
-		
-		/*
-		String str1 = "helloslkhellodjladfjhello";
-	    Pattern p = Pattern.compile("hello");
-	    Matcher m = p.matcher(str1);
-	    int count = 0;
-	    while (m.find()){
-	    	//count +=1;
-	    	
-	    }
-	    System.out.println(count);
-	    */
 		
 	}
 	
@@ -254,14 +146,10 @@ public class ExamineSourceFolder {
 			//System.out.println("String: " + keyJavaFiles.get(i));
 			File ExaminedFile = new File(keyJavaFiles.get(i)); // Make a file of the item to be examined
 			// Get all permissions in the files
-			getRequestedAllPermissionsInApp(ExaminedFile);
+// ENABLE THIS			getRequestedAllPermissionsInApp(ExaminedFile);
 			
-			try {
-				fileContents = u.getContentsofFile(ExaminedFile);
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			
+			fileContents = u.getContentsofFile(ExaminedFile);
 			
 			
 			
@@ -334,8 +222,35 @@ public class ExamineSourceFolder {
 			
 			// Find every instance of if (ActivityCompat.shouldShowRequestPermissionRationale(
 			
+			// Find the permissions that are going to be requested
+			
+			// ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS_CONTACT,
 			
 			
+			
+			String fileString = u.getContentsofFile(ExaminedFile);
+		
+			// String findStr1 = "ActivityCompat.requestPermissions(MainActivity.this,";
+			
+			// Clean the string
+			//fileString=fileString.replace("ActivityCompat.requestPermissions(MainActivity.this", "ActivityCompat.requestPermissions(this"); 
+			
+			String findStr1 = "ActivityCompat.requestPermissions(";
+			int lastIndex = 0;
+			int count = 0;
+			while(lastIndex != -1){
+			    lastIndex = fileString.indexOf(findStr1,lastIndex);
+			    if(lastIndex != -1){
+			        count ++;
+			        lastIndex += findStr1.length();
+			        
+			        String Results = fileString.substring(lastIndex,fileString.indexOf(")",lastIndex));
+			        String[] permArray = Results.split(","); 
+			        
+			        rationalePermissions.add(new RationalePermissions(ExaminedFile.getAbsolutePath(),lastIndex,permArray));  
+			        // Instead of creating an object, maybe just add it to the DB here?
+			    }
+			}
 			
 			
 			
@@ -343,10 +258,16 @@ public class ExamineSourceFolder {
 		}else{
 			System.out.println("NO - " + ExaminedFile.getName());
 		}
+		
+		
+		// Now test all of the Rationale information
+		for (int i=0; i<rationalePermissions.size(); i++){
+			System.out.println(rationalePermissions.get(i).getRationaleInfo());
+		}
+		
 	}
 	
 	
-
 	
 	
 	/*
@@ -513,12 +434,7 @@ public class ExamineSourceFolder {
 	private boolean isFileContainsMFunctionality(File inputFile){
 
 		String strInputFile = "";
-		try {
-			strInputFile = u.getContentsofFile(inputFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		strInputFile = u.getContentsofFile(inputFile);
 		boolean retVal = false;
 		
 		int i=0;

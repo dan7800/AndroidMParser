@@ -38,7 +38,30 @@ public class Dummy {
 		
 		
 		
+		
+		
+		
 		}
+	
+	
+	// Not working
+	public String findStringBetween(){
+		String findStr = "Manifest.permission.";
+		int lastIndex = 0;
+		int count = 0;
+	
+		while(lastIndex != -1){
+		    lastIndex = findStr.indexOf(findStr,lastIndex);
+		    if(lastIndex != -1){
+		        count ++;
+		        lastIndex += findStr.length();
+		        //appManifestPerm.add(new AppPermission(inputFile.getAbsolutePath(),str.substring(lastIndex,str.indexOf(")",lastIndex)),lastIndex));
+		        // Instead of creating an object, maybe just add it to the DB here?
+		    }
+		}
+		return "";
+	}
+	
 	
 	/*
 	// A more generic, reusable way of searching for criteria in a string
