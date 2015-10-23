@@ -21,6 +21,7 @@ public class ExamineSourceFolder {
 	private List<String> keyJavaFiles = new ArrayList<String>(); // Only examine the files we actually care about 
 	private List<AppPermission> appManifestPerm = new ArrayList<AppPermission>(); // Store the app Manifest Permissions requested by the app
 	private List<RationalePermissions> rationalePermissions = new ArrayList<RationalePermissions>(); // Store the app Manifest Permissions requested by the app
+	private List<CheckSelfPermissions> checkSelfPermissions = new ArrayList<CheckSelfPermissions>(); // Store the app Manifest Permissions requested by the app
 	
 	private String masterLogFileLocation;
 	private List<String> MkeyWords = new ArrayList<String>(); // AndroidM Keywords to search for
@@ -110,8 +111,9 @@ public class ExamineSourceFolder {
 			
 			
 			
-			checkShouldShowRequestPermissionRationale(ExaminedFile);
-			
+		//	checkShouldShowRequestPermissionRationale(ExaminedFile);
+		//	checkCheckSelfPermission(ExaminedFile);
+			checkRequestPermissions(ExaminedFile);
 			
 			// Now that we have the file contents, check to see if the specific search criteria is all set.
 			
@@ -128,148 +130,129 @@ public class ExamineSourceFolder {
 	}
 	
 	
+	
+	I stopped here. 
+	
+	// requestPermissions(Activity activity, String[] permissions, int requestCode)
+	// http://developer.android.com/reference/android/support/v4/app/ActivityCompat.html
+	
+	
+	// Record the files "check self permission"
+	private void checkRequestPermissions(File ExaminedFile){
+		if(u.isContainSearchCriteria("checkSelfPermission",ExaminedFile)){
+			
+			String fileString = u.getContentsofFile(ExaminedFile);
+		
+						
+			// Get all the permissions which are being checked to see if they should show the rationale
+			fileString=fileString.toLowerCase().replace(" ","").replace("\n", "").replace("\r", ""); // remove spaces in the input file
+		
+			String StartPattern = " if (ActivityCompat.checkSelfPermission(".replace(" ", "");
+			String endPatthern = ")";
+			
+			// 			http://stackoverflow.com/questions/11255353/java-best-way-to-grab-all-strings-between-two-strings-regex
+			Pattern p = Pattern.compile(Pattern.quote(StartPattern.toLowerCase()) + "(.*?)" + Pattern.quote(endPatthern.toLowerCase()));
+			Matcher m = p.matcher(fileString.toLowerCase());
+			while (m.find()) {
+				//GETTING A LINE NUMBER HERE WOULD BE HELPFUL
+				
+				//System.out.println(m.group(1));
+				final String permission = m.group(1).trim().replace("this,", "");
+	
+				// ? Insert into SQL instead ?
+			//	checkSelfPermissions.add(new CheckSelfPermissions(ExaminedFile.getAbsolutePath(),1,permission));  
+				//System.out.println(permission);
+				
+			}
+			
+		}
+		
+		
+		// Now test all of the CheckSelf information
+		for (int i=0; i<checkSelfPermissions.size(); i++){
+			System.out.println(checkSelfPermissions.get(i).getCheckSelfInfo());
+		}
+	}
+	
+	
+	
+	
+	// Record the files "check self permission"
+	private void checkCheckSelfPermission(File ExaminedFile){
+		if(u.isContainSearchCriteria("checkSelfPermission",ExaminedFile)){
+			
+			String fileString = u.getContentsofFile(ExaminedFile);
+		
+						
+			// Get all the permissions which are being checked to see if they should show the rationale
+			fileString=fileString.toLowerCase().replace(" ","").replace("\n", "").replace("\r", ""); // remove spaces in the input file
+		
+			String StartPattern = " if (ActivityCompat.checkSelfPermission(".replace(" ", "");
+			String endPatthern = ")";
+			
+			// 			http://stackoverflow.com/questions/11255353/java-best-way-to-grab-all-strings-between-two-strings-regex
+			Pattern p = Pattern.compile(Pattern.quote(StartPattern.toLowerCase()) + "(.*?)" + Pattern.quote(endPatthern.toLowerCase()));
+			Matcher m = p.matcher(fileString.toLowerCase());
+			while (m.find()) {
+				//GETTING A LINE NUMBER HERE WOULD BE HELPFUL
+				
+				//System.out.println(m.group(1));
+				final String permission = m.group(1).trim().replace("this,", "");
+	
+				// ? Insert into SQL instead ?
+				checkSelfPermissions.add(new CheckSelfPermissions(ExaminedFile.getAbsolutePath(),1,permission));  
+				//System.out.println(permission);
+				
+			}
+			
+		}
+		
+		
+		// Now test all of the CheckSelf information
+		for (int i=0; i<checkSelfPermissions.size(); i++){
+			System.out.println(checkSelfPermissions.get(i).getCheckSelfInfo());
+		}
+	}
+	
+	
+	
 	// This type of function will be called for all checks
 	private void checkShouldShowRequestPermissionRationale(File ExaminedFile){
 	//System.out.println(fileContents);
 		if(u.isContainSearchCriteria("shouldShowRequestPermissionRationale",ExaminedFile)){
-			System.out.println("Yes - " + ExaminedFile.getName());
+			//System.out.println("Yes - " + ExaminedFile.getName());
 			// Now do stuff with that file
 			
 			
 			
 			String fileString = u.getContentsofFile(ExaminedFile);
-		//	fileString=fileString.replace("ActivityCompat.requestPermissions(MainActivity.this", "ActivityCompat.requestPermissions(this"); 
-			fileString=fileString.replace(" ",""); // remove spaces
-					
-		//	System.out.println(fileString);
-			
-			/*
-			//CHECK TO MAKE SURE THIS STRING IS UNIVERSAL
-			String findStr = "if(ActivityCompat.shouldShowRequestPermissionRationale(";
-			int lastIndex = 0;
-			int count = 0;
-
-			while(lastIndex != -1){
-			    lastIndex = fileString.indexOf(findStr,lastIndex);
-			    if(lastIndex != -1){
-			        count ++;
-			        lastIndex += findStr.length();
-			    //   System.out.println("156: " + lastIndex);
-			      // System.out.println("here: " + fileString.substring(lastIndex,fileString.indexOf(")){")).replace("this,", ""));
-			        // Instead of creating an object, maybe just add it to the DB here?
-			        System.out.println(lastIndex);
-			        // Find the "next" instance of this value
-			        System.out.println(fileString.indexOf(")){"));
-			       
-			    }
-			}
+		
 			
 			
-			*/
+			// Get all the permissions which are being checked to see if they should show the rationale
+			fileString=fileString.toLowerCase().replace(" ","").replace("\n", "").replace("\r", ""); // remove spaces in the input file
+								
+			String StartPattern = "if(ActivityCompat.shouldShowRequestPermissionRationale(";
+			String endPatthern = ")){";
 			
-			/*
-			String pattern1 = "hgb";
-			String pattern2 = "|";
-			String text = "sdfjsdkhfkjsdf hgb sdjfkhsdkfsdf |sdfjksdhfjksd sdf sdkjfhsdkf | sdkjfh hgb sdkjfdshfks|";
-*/
-		/*	
-			String pattern1 = "Start";
-			String pattern2 = "End";
-			String text = "Start Dan End Start Krutz End";
-*/
-/*
-			String pattern1 = "if(ActivityCompat.shouldShowRequestPermissionRationale(this,";
-			String pattern2 = ")){";
-			String text = fileString;
-	*/		
-			
-			String pattern1 = "if(ActivityCompat.shouldShowRequestPermissionRationale(";
-			String pattern2 = ")){";
-			//String text = "if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){DaniscoolActivityCompat.requestPermissions(MainActivity,DONOTSHOW,DONOTSHOW);DaniscoolManifest.permission.CAMERA)){";
-			String text = fileString.toLowerCase();
-			
-		//	System.out.println(fileString);
-			text = text.replace("\n", "").replace("\r", "");
-			//System.out.println(text);
-			Pattern p = Pattern.compile(Pattern.quote(pattern1.toLowerCase()) + "(.*?)" + Pattern.quote(pattern2.toLowerCase()));
-			Matcher m = p.matcher(text.toLowerCase());
+			// 			http://stackoverflow.com/questions/11255353/java-best-way-to-grab-all-strings-between-two-strings-regex
+			Pattern p = Pattern.compile(Pattern.quote(StartPattern.toLowerCase()) + "(.*?)" + Pattern.quote(endPatthern.toLowerCase()));
+			Matcher m = p.matcher(fileString.toLowerCase());
 			
 			while (m.find()) {
-			  System.out.println(m.group(1).trim());
+				//GETTING A LINE NUMBER HERE WOULD BE HELPFUL
+				
+				System.out.println(m.group(1));
+				final String permission = m.group(1).trim().replace("this,", "");
+	
+				// ? Insert into SQL instead ?
+				rationalePermissions.add(new RationalePermissions(ExaminedFile.getAbsolutePath(),1,permission));  
+				
+				
 			}
 			
 			
 			
-			
-			
-			
-			
-			
-			// Find everything between   
-			
-			//if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
-			
-			
-			
-			
-			
-			
-			/*
-			// Each the location of each "shouldShowRequestPermissionRationale"
-			// Find the lines below it
-			//		What is the permission that it is trying to request
-			// 		What is the rationale behind the permission?
-			
-			
-			
-			// Make sure the code is between shouldShowRequestPermissionRationale and 
-			
-		//)) {
-			
-		//	System.out.println("hi");
-			
-			String fileString = u.getContentsofFile(ExaminedFile);
-		
-			// String findStr1 = "ActivityCompat.requestPermissions(MainActivity.this,";
-			
-			// Clean the string
-			//fileString=fileString.replace("ActivityCompat.requestPermissions(MainActivity.this", "ActivityCompat.requestPermissions(this"); 
-			
-			String findStr1 = "ActivityCompat.requestPermissions(";
-			int lastIndex = 0;
-			int count = 0;
-			while(lastIndex != -1){
-			    lastIndex = fileString.indexOf(findStr1,lastIndex);
-			    System.out.println("here:" + lastIndex);
-			    if(lastIndex != -1){
-			        count ++;
-			        lastIndex += findStr1.length();
-			        
-			        
-			        
-			        
-			        
-			        
-			        System.out.println(lastIndex);
-			       // System.out.println(fileString.indexOf("))"));
-			      
-			       // System.out.println(lastIndex);  
-			       // System.out.println(fileString);
-			        
-			      // System.exit(0);
-			    //    String Results = fileString.substring(lastIndex-1,fileString.indexOf("))",lastIndex-1));
-			        
-			        System.exit(0);
-			    
-//			        String[] permArray = Results.split(","); 
-			        
-//			        rationalePermissions.add(new RationalePermissions(ExaminedFile.getAbsolutePath(),lastIndex,permArray));  
-			        // Instead of creating an object, maybe just add it to the DB here?
-			    }
-			}
-			
-			
-			*/
 						
 		}else{
 			System.out.println("NO - " + ExaminedFile.getName());

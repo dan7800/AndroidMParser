@@ -1,13 +1,17 @@
 
 // Holds information about each of the requested permissions and information in the rationale
 //		Will later be used to put this data into a database
-public class RationalePermissions {
+
+// Might not be a bad idea to combine the classes
+
+
+public class CheckSelfPermissions {
 	
 	private String classPath; //Path of the file with permissions
 	private int lineNumber;		// Line number of requested permission
 	private String permission;
 	
-	public RationalePermissions(String classPath, int lineNumber, String Permission) {
+	public CheckSelfPermissions(String classPath, int lineNumber, String Permission) {
 		this.classPath = classPath;
 		this.lineNumber = lineNumber;
 		permission = Permission;
@@ -53,7 +57,7 @@ public class RationalePermissions {
 	}
 	*/
 	
-	public String getRationaleInfo(){
+	public String getCheckSelfInfo(){
 		return lineNumber + " " + classPath + " " + permission;
 	}
 	
