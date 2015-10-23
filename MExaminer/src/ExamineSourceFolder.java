@@ -88,6 +88,7 @@ public class ExamineSourceFolder {
 	
 	
 	// Get all the requested permissions in the source code of the app
+	// THIS WILL LIKELY NEED TO BE TWEAKED
 	private void getRequestedAllPermissionsInApp(File inputFile){
 		
 		String str = null;
@@ -266,7 +267,6 @@ public class ExamineSourceFolder {
 		}
 		
 	}
-	
 	
 	
 	
