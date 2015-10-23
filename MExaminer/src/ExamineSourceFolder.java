@@ -22,48 +22,11 @@ public class ExamineSourceFolder {
 	private List<AppPermission> appManifestPerm = new ArrayList<AppPermission>(); // Store the app Manifest Permissions requested by the app
 	private List<RationalePermissions> rationalePermissions = new ArrayList<RationalePermissions>(); // Store the app Manifest Permissions requested by the app
 	
-	
 	private String masterLogFileLocation;
-	
 	private List<String> MkeyWords = new ArrayList<String>(); // AndroidM Keywords to search for
-	
-	
-	
 	
 	util u = new util();
 
-	// Just get the name of the folder being examined
-	public String getFolderName() {
-		return folderName;
-	}
-
-	// Get the total path of the folder being examined
-	public String getEntireFolderLocation() {
-		return primaryFolderPath + folderName;
-	}
-
-	public ExamineSourceFolder(String MasterLogFileLocation, String dbLocation, String primaryFolderPath, String folderName) {
-		this.dbLocation = dbLocation;
-		this.primaryFolderPath = primaryFolderPath;
-		this.folderName = folderName;
-		this.masterLogFileLocation = MasterLogFileLocation;
-		buildMKeyWords();
-	}
-	
-	
-	// Create a common set of `M' keywords. 
-	// This will likely be used several times
-	private void buildMKeyWords(){
-		MkeyWords.add("checkSelfPermission");
-		MkeyWords.add("requestPermissions");
-		MkeyWords.add("shouldShowRequestPermissionRationale");
-				
-		
-		//MkeyWords.add("ActivityCompat."); // I believe this is the main generic class for M permissions?
-		
-
-	}
-	
 	
 	public void examineFolder(){
 		//System.out.println("examine folder" + this.folderName);
@@ -85,6 +48,11 @@ public class ExamineSourceFolder {
 		// Now for each of the files in identified list, start gathering information on them
 		examineMFiles();
 	}
+	
+	
+	
+	
+	
 	
 	
 	// Get all the requested permissions in the source code of the app
@@ -127,18 +95,6 @@ public class ExamineSourceFolder {
 	// I broke this down into several steps in the hope that it would make things faster
 	private void examineMFiles(){
 		
-		// Record that the file contains the item
-		
-		
-		// Send it out to investigate the exact items in the file
-		
-		
-		// 1) Get the contents of a file and load it into a local string
-		// 2) Examine that string to see if it contains keywords (case?)
-		// 3) If the Keyword is found, then send it to the specific function for further analysis
-		
-		
-		// Load file contents to string. This might make it faster to examine the file later on
 		
 		String fileContents = "";
 		for(int i=0; i<keyJavaFiles.size(); i++){
@@ -146,8 +102,8 @@ public class ExamineSourceFolder {
 				
 			//System.out.println("String: " + keyJavaFiles.get(i));
 			File ExaminedFile = new File(keyJavaFiles.get(i)); // Make a file of the item to be examined
-			// Get all permissions in the files
-// ENABLE THIS			getRequestedAllPermissionsInApp(ExaminedFile);
+			
+// ENABLE THIS			getRequestedAllPermissionsInApp(ExaminedFile); // Get all permissions in the files
 			
 			
 			fileContents = u.getContentsofFile(ExaminedFile);
@@ -169,65 +125,108 @@ public class ExamineSourceFolder {
 		}
 		
 		
-		
-		/*
-		// Loop through all of the key files
-		for(int i=0; i<keyJavaFiles.size(); i++){
-			//System.out.println(keyJavaFiles.get(i).toString());
-			// This is where specific rule checks go
-			
-			
-			// Files might have many "M" commands
-			// Loop through the master M list
-			for(int x=0; x<MkeyWords.size();x++){
-				//System.out.println("check to see if " + keyJavaFiles.get(i)  + " contains: " + MkeyWords.get(x));
-				
-				
-				// Record that the file contains the item
-				
-				
-				// Send it out to investigate the exact items in the file
-				
-				
-				// 1) Get the contents of a file and load it into a local string
-				// 2) Examine that string to see if it contains keywords (case?)
-				// 3) If the Keyword is found, then send it to the specific function for further analysis
-				
-				
-				// Load file contents to string
-				System.out.println("String: " + keyJavaFiles.get(i));
-				
-				
-				
-			
-			}
-			
-			
-			
-		}
-		*/
 	}
 	
 	
 	// This type of function will be called for all checks
 	private void checkShouldShowRequestPermissionRationale(File ExaminedFile){
 	//System.out.println(fileContents);
-		if(isContainSearchCriteria("shouldShowRequestPermissionRationale",ExaminedFile)){
+		if(u.isContainSearchCriteria("shouldShowRequestPermissionRationale",ExaminedFile)){
 			System.out.println("Yes - " + ExaminedFile.getName());
 			// Now do stuff with that file
 			
+			
+			
+			String fileString = u.getContentsofFile(ExaminedFile);
+		//	fileString=fileString.replace("ActivityCompat.requestPermissions(MainActivity.this", "ActivityCompat.requestPermissions(this"); 
+			fileString=fileString.replace(" ",""); // remove spaces
+					
+		//	System.out.println(fileString);
+			
+			/*
+			//CHECK TO MAKE SURE THIS STRING IS UNIVERSAL
+			String findStr = "if(ActivityCompat.shouldShowRequestPermissionRationale(";
+			int lastIndex = 0;
+			int count = 0;
+
+			while(lastIndex != -1){
+			    lastIndex = fileString.indexOf(findStr,lastIndex);
+			    if(lastIndex != -1){
+			        count ++;
+			        lastIndex += findStr.length();
+			    //   System.out.println("156: " + lastIndex);
+			      // System.out.println("here: " + fileString.substring(lastIndex,fileString.indexOf(")){")).replace("this,", ""));
+			        // Instead of creating an object, maybe just add it to the DB here?
+			        System.out.println(lastIndex);
+			        // Find the "next" instance of this value
+			        System.out.println(fileString.indexOf(")){"));
+			       
+			    }
+			}
+			
+			
+			*/
+			
+			/*
+			String pattern1 = "hgb";
+			String pattern2 = "|";
+			String text = "sdfjsdkhfkjsdf hgb sdjfkhsdkfsdf |sdfjksdhfjksd sdf sdkjfhsdkf | sdkjfh hgb sdkjfdshfks|";
+*/
+		/*	
+			String pattern1 = "Start";
+			String pattern2 = "End";
+			String text = "Start Dan End Start Krutz End";
+*/
+/*
+			String pattern1 = "if(ActivityCompat.shouldShowRequestPermissionRationale(this,";
+			String pattern2 = ")){";
+			String text = fileString;
+	*/		
+			
+			String pattern1 = "if(ActivityCompat.shouldShowRequestPermissionRationale(";
+			String pattern2 = ")){";
+			//String text = "if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){DaniscoolActivityCompat.requestPermissions(MainActivity,DONOTSHOW,DONOTSHOW);DaniscoolManifest.permission.CAMERA)){";
+			String text = fileString.toLowerCase();
+			
+		//	System.out.println(fileString);
+			text = text.replace("\n", "").replace("\r", "");
+			//System.out.println(text);
+			Pattern p = Pattern.compile(Pattern.quote(pattern1.toLowerCase()) + "(.*?)" + Pattern.quote(pattern2.toLowerCase()));
+			Matcher m = p.matcher(text.toLowerCase());
+			
+			while (m.find()) {
+			  System.out.println(m.group(1).trim());
+			}
+			
+			
+			
+			
+			
+			
+			
+			
+			// Find everything between   
+			
+			//if (ActivityCompat.shouldShowRequestPermissionRationale(this, Manifest.permission.CAMERA)) {
+			
+			
+			
+			
+			
+			
+			/*
 			// Each the location of each "shouldShowRequestPermissionRationale"
 			// Find the lines below it
 			//		What is the permission that it is trying to request
 			// 		What is the rationale behind the permission?
 			
-			// Find every instance of if (ActivityCompat.shouldShowRequestPermissionRationale(
-			
-			// Find the permissions that are going to be requested
-			
-			// ActivityCompat.requestPermissions(MainActivity.this, PERMISSIONS_CONTACT,
 			
 			
+			// Make sure the code is between shouldShowRequestPermissionRationale and 
+			
+		//)) {
+			
+		//	System.out.println("hi");
 			
 			String fileString = u.getContentsofFile(ExaminedFile);
 		
@@ -241,20 +240,36 @@ public class ExamineSourceFolder {
 			int count = 0;
 			while(lastIndex != -1){
 			    lastIndex = fileString.indexOf(findStr1,lastIndex);
+			    System.out.println("here:" + lastIndex);
 			    if(lastIndex != -1){
 			        count ++;
 			        lastIndex += findStr1.length();
 			        
-			        String Results = fileString.substring(lastIndex,fileString.indexOf(")",lastIndex));
-			        String[] permArray = Results.split(","); 
 			        
-			        rationalePermissions.add(new RationalePermissions(ExaminedFile.getAbsolutePath(),lastIndex,permArray));  
+			        
+			        
+			        
+			        
+			        System.out.println(lastIndex);
+			       // System.out.println(fileString.indexOf("))"));
+			      
+			       // System.out.println(lastIndex);  
+			       // System.out.println(fileString);
+			        
+			      // System.exit(0);
+			    //    String Results = fileString.substring(lastIndex-1,fileString.indexOf("))",lastIndex-1));
+			        
+			        System.exit(0);
+			    
+//			        String[] permArray = Results.split(","); 
+			        
+//			        rationalePermissions.add(new RationalePermissions(ExaminedFile.getAbsolutePath(),lastIndex,permArray));  
 			        // Instead of creating an object, maybe just add it to the DB here?
 			    }
 			}
 			
 			
-			
+			*/
 						
 		}else{
 			System.out.println("NO - " + ExaminedFile.getName());
@@ -270,26 +285,8 @@ public class ExamineSourceFolder {
 	
 	
 	
-	/*
-	// Check to see if a file contains a specific command
-	private boolean isFileContainString(File inputFile, String checkString){
-		try {
-			final String strInputFile = u.getContentsofFile(inputFile);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//if(strInputFile.){
-			
-		//}
-		
-		
-		return true;
-	} 
-	*/
 	
-	/*
+	
 	private void examineManifestFile(){
 		String manifestFileLocation = getManifestFileLocation(getEntireFolderLocation()); // Where is the manifest file located
 	
@@ -312,84 +309,10 @@ public class ExamineSourceFolder {
 		// onRequestPermissionsResult
 		
 	}
-	*/
 	
 	
 	
-	
-	// A more generic, reusable way of searching for criteria in a string
-	// This will be used for all checking functions
-	
-	private boolean isContainSearchCriteria(String searchCriteria, File inputFile){
-		boolean retVal=false;
-		if(u.isFileContainSearchCriteria(inputFile, searchCriteria)){
-			retVal=true;
-		}
-		return retVal;
-	}
-	
-	
-	// find the manifest file. Return the location of the manifest file
-	private String getManifestFileLocation(String folderLocation){
 		
-		String retVal="";
-		
-		File folder = new File(folderLocation);
-		File[] listOfFiles = folder.listFiles();
-		
-		for (int i = 0; i < listOfFiles.length; i++) {
-			   
-		      if (listOfFiles[i].isFile()) {
-		        System.out.println("File " + listOfFiles[i].getName());
-		      } else if (listOfFiles[i].isDirectory()) {
-			    	  // now look into the app directory
-			  			File folder_app = new File(listOfFiles[i].getAbsolutePath());
-			  			File[] listOfFiles_app = folder_app.listFiles();
-			  			 for (int ii = 0; ii < listOfFiles_app.length; ii++) {
-			  				 
-			  				 if(!listOfFiles_app[ii].getName().toLowerCase().contains("ds_store")){ // Ignore certain file types
-					  			File manifestFile = new File(listOfFiles_app[ii].getAbsolutePath()+"/AndroidManifest.xml");
-					  			//System.out.println(manifestFile.exists());
-					  			if(!manifestFile.exists()){
-					  				// It doesn't exist, so log a message
-					  				System.out.println("----No Manifest file found for: ");
-					  				System.out.println("--------AppName: " + listOfFiles[i].getName());
-					  				System.out.println("--------CommitName: " + listOfFiles_app[ii].getName());
-					  				System.out.println("--------" + listOfFiles_app[ii].getAbsolutePath());
-					  				
-					  				// Add this to a log file
-					  				
-					  				
-					  			}else{
-					  				// Add all the manifest files to the master list
-					  				//MasterManifestList.add(new manifestItem(manifestFile, u.getContentsofFile(manifestFile), listOfFiles[i].getName(), listOfFiles_app[ii].getName()));
-					  				//System.out.println(manifestFile);
-					  				//retVal=manifestFile.getAbsolutePath();
-					  				try {
-										retVal=manifestFile.getCanonicalPath();
-									} catch (IOException e) {
-										// TODO Auto-generated catch block
-										e.printStackTrace();
-									}
-					  			}
-			  				 }else{
-			  					 System.out.println("Skip file: " + listOfFiles_app[ii].getName());
-			  				 }
-				  		}  
-			      }
-		}
-		
-		return retVal;
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 	
 	
@@ -470,6 +393,96 @@ public class ExamineSourceFolder {
 	    }
 	}
 	
+
+	
+	// find the manifest file. Return the location of the manifest file
+	private String getManifestFileLocation(String folderLocation){
+		
+		String retVal="";
+		
+		File folder = new File(folderLocation);
+		File[] listOfFiles = folder.listFiles();
+		
+		for (int i = 0; i < listOfFiles.length; i++) {
+			   
+		      if (listOfFiles[i].isFile()) {
+		        System.out.println("File " + listOfFiles[i].getName());
+		      } else if (listOfFiles[i].isDirectory()) {
+			    	  // now look into the app directory
+			  			File folder_app = new File(listOfFiles[i].getAbsolutePath());
+			  			File[] listOfFiles_app = folder_app.listFiles();
+			  			 for (int ii = 0; ii < listOfFiles_app.length; ii++) {
+			  				 
+			  				 if(!listOfFiles_app[ii].getName().toLowerCase().contains("ds_store")){ // Ignore certain file types
+					  			File manifestFile = new File(listOfFiles_app[ii].getAbsolutePath()+"/AndroidManifest.xml");
+					  			//System.out.println(manifestFile.exists());
+					  			if(!manifestFile.exists()){
+					  				// It doesn't exist, so log a message
+					  				System.out.println("----No Manifest file found for: ");
+					  				System.out.println("--------AppName: " + listOfFiles[i].getName());
+					  				System.out.println("--------CommitName: " + listOfFiles_app[ii].getName());
+					  				System.out.println("--------" + listOfFiles_app[ii].getAbsolutePath());
+					  				
+					  				// Add this to a log file
+					  				
+					  				
+					  			}else{
+					  				// Add all the manifest files to the master list
+					  				//MasterManifestList.add(new manifestItem(manifestFile, u.getContentsofFile(manifestFile), listOfFiles[i].getName(), listOfFiles_app[ii].getName()));
+					  				//System.out.println(manifestFile);
+					  				//retVal=manifestFile.getAbsolutePath();
+					  				try {
+										retVal=manifestFile.getCanonicalPath();
+									} catch (IOException e) {
+										// TODO Auto-generated catch block
+										e.printStackTrace();
+									}
+					  			}
+			  				 }else{
+			  					 System.out.println("Skip file: " + listOfFiles_app[ii].getName());
+			  				 }
+				  		}  
+			      }
+		}
+		
+		return retVal;
+	}
+	
+	// Start of *Dummy* Functions //
+	
+	
+	// Just get the name of the folder being examined
+	public String getFolderName() {
+		return folderName;
+	}
+
+	// Get the total path of the folder being examined
+	public String getEntireFolderLocation() {
+		return primaryFolderPath + folderName;
+	}
+
+	public ExamineSourceFolder(String MasterLogFileLocation, String dbLocation, String primaryFolderPath, String folderName) {
+		this.dbLocation = dbLocation;
+		this.primaryFolderPath = primaryFolderPath;
+		this.folderName = folderName;
+		this.masterLogFileLocation = MasterLogFileLocation;
+		buildMKeyWords();
+	}
+	
+	
+	// Create a common set of `M' keywords. 
+	// This will likely be used several times
+	private void buildMKeyWords(){
+		MkeyWords.add("checkSelfPermission");
+		MkeyWords.add("requestPermissions");
+		MkeyWords.add("shouldShowRequestPermissionRationale");
+				
+		
+		//MkeyWords.add("ActivityCompat."); // I believe this is the main generic class for M permissions?
+		
+
+	}
+
 
 	// Todo
 	//	Search all the files for "Manifest.permission." .. This will record the permissions the app actually uses

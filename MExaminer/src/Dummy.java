@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Scanner;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 // Just a dummy, scratch pad for file analysis
@@ -39,47 +41,35 @@ public class Dummy {
 		
 		
 		
-		
+		match();
 		
 		}
 	
-	
-	// Not working
-	public String findStringBetween(){
-		String findStr = "Manifest.permission.";
-		int lastIndex = 0;
-		int count = 0;
-	
-		while(lastIndex != -1){
-		    lastIndex = findStr.indexOf(findStr,lastIndex);
-		    if(lastIndex != -1){
-		        count ++;
-		        lastIndex += findStr.length();
-		        //appManifestPerm.add(new AppPermission(inputFile.getAbsolutePath(),str.substring(lastIndex,str.indexOf(")",lastIndex)),lastIndex));
-		        // Instead of creating an object, maybe just add it to the DB here?
-		    }
+	private void match(){
+		
+		
+		/*
+		String pattern1 = "Start";
+		String pattern2 = "End";
+		String text = "Start Dan End Start Krutz End";
+		*/
+		
+		String pattern1 = "if(ActivityCompat.shouldShowRequestPermissionRationale(";
+		String pattern2 = ")){";
+		String text = "if(ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.CAMERA)){DaniscoolActivityCompat.requestPermissions(MainActivity,DONOTSHOW,DONOTSHOW);DaniscoolManifest.permission.CAMERA)){";
+		
+		
+		
+		
+		Pattern p = Pattern.compile(Pattern.quote(pattern1) + "(.*?)" + Pattern.quote(pattern2));
+		Matcher m = p.matcher(text);
+		while (m.find()) {
+		  System.out.println(m.group(1));
 		}
-		return "";
+		
+		
+		
 	}
-	
-	
-	/*
-	// A more generic, reusable way of searching for criteria in a string
-	private boolean isContainSearchCriteria(String searchCriteria, String inputFile){
-		boolean retVal=false;
-		
-	//	searchCriteria=searchCriteria.toLowerCase(); // Make sure that each are converted to lowercase
-	//	inputFile = inputFile.toLowerCase();
-
-		if(searchCriteria.toLowerCase().contains(inputFile.toLowerCase())){
-			retVal = true;
-		}
-		
-		
-		return retVal;
-	}
-	
-	*/
 	
 	
 	

@@ -91,6 +91,21 @@ public class util {
 
 	}
 	
+	
+
+	// A more generic, reusable way of searching for criteria in a string
+	// This will be used for all checking functions
+	
+	public boolean isContainSearchCriteria(String searchCriteria, File inputFile){
+		boolean retVal=false;
+		if(isFileContainSearchCriteria(inputFile, searchCriteria)){
+			retVal=true;
+		}
+		return retVal;
+	}
+	
+	
+	
 	// Check to see if the file you are analyzing contains the specific search critiera
 	public  boolean isFileContainSearchCriteria(File inputFile, String searchCriteria){
 		boolean retVal=false;
@@ -116,7 +131,11 @@ public class util {
 		}
 			return retVal;
 		}
-
+	
+	
+	
+	
+	
 	
 	public String findStringBetween(){
 		
