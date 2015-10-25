@@ -142,5 +142,36 @@ public class util {
 		return "";
 	}
 	
+	
+	
+	
+	// These are not needed right now
+	// They come from https://code.google.com/p/dk-crest-java/source/browse/trunk/%20dk-crest-java%20--username%20dek782%40gmail.com/crestClean/src/dk/util.java
+	/*
+	// Determine if the system is unix or mac
+	   public boolean isUnix(){
+           boolean retVal = true;
+           if (System.getProperty("os.name").startsWith("Windows")) {
+                   retVal=false;
+       }
+           return retVal;
+   }
+	   
+	   
+	   // Alterate the switching value based on windows vs. Unix               
+       public String getFolderVal(){
+               String sepVal="";                       
+               if (isUnix()){
+                       // Unix
+                       sepVal = "/";
+               }else{
+                       // WIN /
+                       sepVal = "\\";
+               }
+               return sepVal;
+       }
+       */
+    
+	
 
 }

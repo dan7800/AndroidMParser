@@ -131,7 +131,7 @@ public class ExamineSourceFolder {
 	
 	
 	
-	I stopped here. 
+//	I stopped here. 
 	
 	// requestPermissions(Activity activity, String[] permissions, int requestCode)
 	// http://developer.android.com/reference/android/support/v4/app/ActivityCompat.html
