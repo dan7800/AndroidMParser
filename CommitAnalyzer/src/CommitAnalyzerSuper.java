@@ -17,27 +17,18 @@ public class CommitAnalyzerSuper {
 	}
 
 	
-	private void Run(){
-		System.out.println("dan");
-	}
-	
-	
-	private boolean isInList(){
-		return false;
-	}
-	
-	
 	
 	// Create the list of changes made to the DB
 	private void buildChangeList(){
 		
 		//1) Loop through all the commits
 		
-		int AppID=-1; //define the initial appID
+		int AppID=-1; 	//define the initial appID
+		int commitID=-1;//define the initial commitID
 		
 		// Create the list of permissions
-		List permissionsList = new ArrayList();
-		List permissionsList_Temp = new ArrayList();
+		List permissionsList_Current = new ArrayList();
+		List permissionsList_Prev = new ArrayList();
 		
 		
 		// select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view
@@ -50,45 +41,78 @@ public class CommitAnalyzerSuper {
 		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
 		    	c.setAutoCommit(false);
 		
-		    	
 		    	stmt = c.createStatement();
-		    	String sql1a="select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view where appID =10";
-		    	ResultSet rs2 = stmt.executeQuery( sql1a );
-		    	 
-		    	 while (rs2.next()) {
-		    		
-		    		 // Not a new AppID
-		    		 if(Integer.parseInt(rs2.getString("appID"))==AppID){
-
-		    			 
-
-		    			 permissionsList_Temp = permissionsList; // set the temp list equal to the old list
-		    			 
-		    			 
-		    			 
-		    			// Check to see if the permission is in the list
-		    			 
-		    			 
-		    			 // Next check to see if the old list was 
-		    			
-		    			 
-		    			 
-		    		//	 permissionsList.add(Integer.parseInt(rs2.getString("permission_ID")));
-		    		
+		    	//String sql1a="select Permission_ID, commit_ID, appID, commit_date from ManifestPermissionCommitt_view where appID =1121";
+		    	//ResultSet rs2 = stmt.executeQuery( sql1a );
+		    	
+		    	
+		    	// Get every AppID
+		    	String sqlAppID="select distinct(appID) as appID from ManifestPermissionCommitt_view where appID =10";
+		    	ResultSet rsAppID = stmt.executeQuery( sqlAppID );
+		    	
+		    	 while (rsAppID.next()) {	
+//		    		 System.out.println(rsAppID.getString("appID")); 
 		    		 
-		    		// New AppID
-		    		 }else{
-		    			 // Set a new appID and clear the list
-		    			 AppID=Integer.parseInt(rs2.getString("appID"));
-		    			// System.out.println(AppID);
-		    			 permissionsList.clear();
+		    		 
+		    		 // now build the list of commits
+		    		 
+		    		 String sqlCommitID="select distinct(commit_ID) as commitID from ManifestPermissionCommitt_view where appID=" +Integer.parseInt(rsAppID.getString("appID")) ;
+		    		 ResultSet rsCommitID = stmt.executeQuery( sqlCommitID );
+		    		 
+		    		 
+		    		 while (rsCommitID.next()) {
+		    			// System.out.println(rsAppID.getString("commitID"));
+		    			 
+		    			 // get all the permissions for each commit ID
+		    			 String sqlPermissions="select Commit_ID as commitID, Permission_ID from ManifestPermissionCommitt_view where commit_ID= " + Integer.parseInt(rsAppID.getString("commitID"));
+			    		 ResultSet rsPermissions = stmt.executeQuery( sqlPermissions );
+			    		/*
+			    		 while (rsCommitID.next()) {
+			    			 //System.out.println(rsAppID.getString("Permission_ID"));
+			    			 // Add these permissions to the current list
+			    			 permissionsList_Current.add(Integer.parseInt(rsCommitID.getString("permission_ID")));
+			    		
+			    		 
+			    		 }
+			    		 */
+			    		 System.out.println(rsAppID.getString("appID"));
+			    		
+			    		 
+			    		 
+			    		 //rsCommitID.close();
+		    			 
+			    		
+			    		// showList(permissionsList_Current);
+		    			// System.exit(0);
+		    			 
+			    		 
+		    			 
+		    			 
 		    		 }
 		    		 
-		    		
-		    		// System.out.println(rs2.getString("Permission_ID") +" "+ rs2.getString("appID"));
+		    		 
+		    		 
 		    	 }
-		    	// System.out.println("dan");
-		    	// showList(permissionsList);
+		    	
+		    	
+		    	
+		    	
+		    	//inside every app id, get every commit
+		    	//build the permissions for each commit
+		    	// At the end, compoare the list of permissions in the commit to the old list
+		    	// Log the differences
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
 		   } catch ( Exception e ) {
 			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			      System.exit(0);
@@ -136,94 +160,47 @@ public class CommitAnalyzerSuper {
 	}
 	
 	
-	
-	// good for testing
-	private void dbConnect(){
+	private void AnalyzeLists(List la, List lb){
 		
-		Connection c = null;
-	    Statement stmt = null;
-		 try {
-		    	Class.forName("org.sqlite.JDBC");
-		      
-		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
-		    	c.setAutoCommit(false);
-		    	
-		    
-		    	/*
-		    	stmt = c.createStatement();
-		        String sql = "delete from apkparser_intents";
-		        System.out.println(sql);
-		        stmt.executeUpdate(sql);
-		        c.commit();
-			     */
-		    	
-		    	stmt = c.createStatement();
-		    	 String sql1a="select * from android_Manifest_permission_join where commit_ID = 51";
-		    	 ResultSet rs2 = stmt.executeQuery( sql1a );
-		    	 System.out.println(rs2.getString("Permission_ID"));
-		    	 	
-		    	//System.out.println("Files cleared");
-		
-		    	
-		    } catch ( Exception e ) {
-			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-			      System.exit(0);
-			    }
+		// get what was added
+		getAdded(la, lb);
+		getMissing(la, lb);
 			
-		
-		
-		/*
-		Connection c = null;
-	    try {
-	      Class.forName("org.sqlite.JDBC");
-	      c = DriverManager.getConnection("jdbc:sqlite:test.db");
-	    } catch ( Exception e ) {
-	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-	      System.exit(0);
-	    }
-	    System.out.println("Opened database successfully");
-	  }
-	  */
-		
-		/*
-		Connection c = null;
-	    Statement stmt = null;
-	    try {
-	      Class.forName("org.sqlite.JDBC");
-	      c = DriverManager.getConnection("jdbc:sqlite:test.db");
-	      c.setAutoCommit(false);
-	      System.out.println("Opened database successfully");
-
-	      stmt = c.createStatement();
-	      ResultSet rs = stmt.executeQuery( "SELECT * FROM android_Manifest_permission_join;" );
-	      while ( rs.next() ) {
-	    	  System.out.println("Dan");
-	    	  
-	         int id = rs.getInt("id");
-	         String  name = rs.getString("name");
-	         int age  = rs.getInt("age");
-	         String  address = rs.getString("address");
-	         float salary = rs.getFloat("salary");
-	         System.out.println( "ID += " + id );
-	         System.out.println( "NAME = " + name );
-	         System.out.println( "AGE = " + age );
-	         System.out.println( "ADDRESS = " + address );
-	         System.out.println( "SALARY = " + salary );
-	         System.out.println();
-	         
-	      }
-	      rs.close();
-	      stmt.close();
-	      c.close();
-	    } catch ( Exception e ) {
-	      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-	      System.exit(0);
-	    }
-	    System.out.println("Operation done successfully");
-	 
-	*/
+		// get what was removed
 	}
+
+	//Get what was added to the permissions list
+	private void getAdded(List la, List lb){
 		
+		// Loop through each of the items and then add them to the db
+		List added = getAddedListValues(la, lb);
+		for(int i=0; i<added.size(); i++){
+//			System.out.println("Added:" + added.get(i));
+		}
+	}
+
+	// Get what was removed from the list
+	private void getMissing(List la, List lb){
+		List removed = getMissingListValues(la, lb);
+		for(int i=0; i<removed.size(); i++){
+			System.out.println("Removed:" + removed.get(i));
+		}
+	}
+
+	// Create the list of added items
+	private List getAddedListValues(List la, List lb){
+		List toReturn = new ArrayList(lb);
+		toReturn.removeAll(la);
+		return toReturn;
+	}
+
+
+	// Create the list of removed items
+	private List getMissingListValues(List la, List lb){
+		List toReturn = new ArrayList(la);
+		toReturn.removeAll(lb);
+		return toReturn;
+	}
 		
 	}
 	

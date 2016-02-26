@@ -37,9 +37,24 @@ private void Run(){
 //	showList(a1);
 //	showList(a2);
 	
-	AnalyzeLists(oldPermissions, newPermissions);
-	
+//	AnalyzeLists(oldPermissions, newPermissions);
+	System.out.println(isExistInList(oldPermissions, 0));
+	System.out.println(isExistInList(oldPermissions, 2));
+	System.out.println(isExistInList(oldPermissions, 3));
+	System.out.println(isExistInList(oldPermissions, 4));
 	}
+
+
+// Detter
+private boolean isExistInList(List a, int item){
+	boolean retVal=false;
+	if(a.contains(item)){
+		retVal=true;
+	}
+	
+	return retVal;
+}
+
 
 
 private void AnalyzeLists(List la, List lb){
