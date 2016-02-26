@@ -49,7 +49,7 @@ public class CommitAnalyzerSuper {
 		    	
 		    	
 		    
-		    	String sqlAllApps="select * from ManifestPermissionCommitt_view where appID =10";
+		    	String sqlAllApps="select * from ManifestPermissionCommitt_view where appID =35";
 		    	ResultSet rsAllApps = stmt.executeQuery( sqlAllApps );
 		    	
 		    	while (rsAllApps.next()) {
@@ -59,13 +59,36 @@ public class CommitAnalyzerSuper {
 		    		if(Integer.parseInt(rsAllApps.getString("appID"))!=AppID){
 		    			AppID=Integer.parseInt(rsAllApps.getString("appID"));
 		    			commitID=-1;
-		    			
+		    			permissionsList_Prev.clear();
+		    			permissionsList_Current.clear();
 		    			// add all permissions as new
-		    			System.out.println("dan");
+		    			
+		    			//permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
+		    			System.out.println("analyze lists: " + rsAllApps.getString("Commit_ID"));
+		    			
+		    		}else{
 		    		
-		    		
-		    		// if new commit ID
-		    		
+		    			
+		    			// check to see if the commit ID is new
+		    			if(Integer.parseInt(rsAllApps.getString("Commit_ID"))!=commitID){  
+		    				// The commit ID is new
+		    				
+		    				// Do the comparision of the list items to see what permissions are new
+		    				//		Also do this at the end of the loop
+		    				
+		    				
+		    				System.out.println("analyze lists: " + rsAllApps.getString("Commit_ID"));
+		    				// AnalyzeLists(permissionsList_Prev, permissionsList_Current);
+		    				 
+		    				 
+		    				 permissionsList_Prev=permissionsList_Current;
+		    				 commitID=Integer.parseInt(rsAllApps.getString("Commit_ID"));
+		    			}else{ // the commit ID is not new
+		    				// Add the permission to the current list
+		    				
+		    				permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
+		    				
+		    			}
 		    			
 		    			
 		    			
@@ -145,7 +168,7 @@ public class CommitAnalyzerSuper {
 	
 	
 	private void AnalyzeLists(List la, List lb){
-		
+	
 		// get what was added
 		getAdded(la, lb);
 		getMissing(la, lb);
@@ -159,7 +182,7 @@ public class CommitAnalyzerSuper {
 		// Loop through each of the items and then add them to the db
 		List added = getAddedListValues(la, lb);
 		for(int i=0; i<added.size(); i++){
-//			System.out.println("Added:" + added.get(i));
+			System.out.println("Added:" + added.get(i));
 		}
 	}
 
