@@ -1,4 +1,6 @@
 import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class CommitAnalyzerSuper {
 
@@ -20,10 +22,22 @@ public class CommitAnalyzerSuper {
 	}
 	
 	
+	private boolean isInList(){
+		return false;
+	}
+	
+	
+	
 	// Create the list of changes made to the DB
 	private void buildChangeList(){
 		
 		//1) Loop through all the commits
+		
+		int AppID=-1; //define the initial appID
+		
+		// Create the list of permissions
+		List permissionsList = new ArrayList();
+		List permissionsList_Temp = new ArrayList();
 		
 		
 		// select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view
@@ -38,16 +52,43 @@ public class CommitAnalyzerSuper {
 		
 		    	
 		    	stmt = c.createStatement();
-		    	 String sql1a="select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view";
-		    	 ResultSet rs2 = stmt.executeQuery( sql1a );
+		    	String sql1a="select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view where appID =10";
+		    	ResultSet rs2 = stmt.executeQuery( sql1a );
 		    	 
-		    	 // Loop through the DB
 		    	 while (rs2.next()) {
-		    		 System.out.println(rs2.getString("Permission_ID"));
+		    		
+		    		 // Not a new AppID
+		    		 if(Integer.parseInt(rs2.getString("appID"))==AppID){
+
+		    			 
+
+		    			 permissionsList_Temp = permissionsList; // set the temp list equal to the old list
+		    			 
+		    			 
+		    			 
+		    			// Check to see if the permission is in the list
+		    			 
+		    			 
+		    			 // Next check to see if the old list was 
+		    			
+		    			 
+		    			 
+		    		//	 permissionsList.add(Integer.parseInt(rs2.getString("permission_ID")));
+		    		
 		    		 
+		    		// New AppID
+		    		 }else{
+		    			 // Set a new appID and clear the list
+		    			 AppID=Integer.parseInt(rs2.getString("appID"));
+		    			// System.out.println(AppID);
+		    			 permissionsList.clear();
+		    		 }
+		    		 
+		    		
+		    		// System.out.println(rs2.getString("Permission_ID") +" "+ rs2.getString("appID"));
 		    	 }
-		    	
-		
+		    	// System.out.println("dan");
+		    	// showList(permissionsList);
 		   } catch ( Exception e ) {
 			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			      System.exit(0);
@@ -57,12 +98,16 @@ public class CommitAnalyzerSuper {
 	}
 	
 	
+	private void showList(List list){
+		for (int i=0; i<list.size();i++){
+			System.out.println(list.get(i));
+		}
+	}
+	
 	
 	
 	// Go through and build a list of all permission in each commit. This will tell you what changes
-	
-	
-	
+		
 	private void PrepDB(){
 		
 		
