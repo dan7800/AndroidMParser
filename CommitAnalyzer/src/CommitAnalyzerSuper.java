@@ -5,6 +5,10 @@ import java.util.List;
 public class CommitAnalyzerSuper {
 
 	private final String DbLocation = "E:\\Dropbox\\confpapers\\AndroidData\\F-Droid_LifeCycles\\data\\AndrosecData.sqlite";
+	
+	private List<appIDInfo> appIDList=new ArrayList<appIDInfo>();
+	
+	
 	public static void main(String[] args) {
 		
 		CommitAnalyzerSuper cas = new CommitAnalyzerSuper();
@@ -49,55 +53,77 @@ public class CommitAnalyzerSuper {
 		    	
 		    	
 		    
-		    	String sqlAllApps="select * from ManifestPermissionCommitt_view where appID =35";
+		    	String sqlAllApps="select distinct(commit_ID) as commit_ID, appID from ManifestPermissionCommitt_view where appid =35";
 		    	ResultSet rsAllApps = stmt.executeQuery( sqlAllApps );
 		    	
 		    	while (rsAllApps.next()) {
-		    		//System.out.println(rsAllApps.getString("commit_ID"));
+		    		// build list of all appids
 		    		
-		    		// Check to see if there is a new app ID
-		    		if(Integer.parseInt(rsAllApps.getString("appID"))!=AppID){
-		    			AppID=Integer.parseInt(rsAllApps.getString("appID"));
-		    			commitID=-1;
-		    			permissionsList_Prev.clear();
-		    			permissionsList_Current.clear();
-		    			// add all permissions as new
-		    			
-		    			//permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
-		    			System.out.println("analyze lists: " + rsAllApps.getString("Commit_ID"));
-		    			
-		    		}else{
+		    		//appIDCommitListList.add(new AppIDCommitPair(Integer.parseInt(rsAllApps.getString("appID")), Integer.parseInt(rsAllApps.getString("Commit_ID"))));	
+		    		appIDList.add(new appIDInfo(Integer.parseInt(rsAllApps.getString("appID"))));
+		    	
+		    	}
+		    	
+
+		    	
+		    	
+		    	
+		   
+		    	// now loop through the created objects and add all commit items
+		    	for(int a=0; a<appIDList.size(); a++){
+		    		String sqlAppInfo="select * from ManifestPermissionCommitt_view where appid =" + appIDList.get(a).getAppID();
+			    //	System.out.println(sqlAppInfo);
+		    		ResultSet rsAppInfo = stmt.executeQuery( sqlAppInfo );
 		    		
-		    			
-		    			// check to see if the commit ID is new
-		    			if(Integer.parseInt(rsAllApps.getString("Commit_ID"))!=commitID){  
-		    				// The commit ID is new
-		    				
-		    				// Do the comparision of the list items to see what permissions are new
-		    				//		Also do this at the end of the loop
-		    				
-		    				
-		    				System.out.println("analyze lists: " + rsAllApps.getString("Commit_ID"));
-		    				// AnalyzeLists(permissionsList_Prev, permissionsList_Current);
-		    				 
-		    				 
-		    				 permissionsList_Prev=permissionsList_Current;
-		    				 commitID=Integer.parseInt(rsAllApps.getString("Commit_ID"));
-		    			}else{ // the commit ID is not new
-		    				// Add the permission to the current list
-		    				
-		    				permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
-		    				
-		    			}
-		    			
-		    			
-		    			
+			    	while (rsAppInfo.next()) {
+			    	//	System.out.println("add item");
+			    		// add the commitInfo to the list
+			    		appIDList.get(a).addCommitInfoList(Integer.parseInt(rsAppInfo.getString("Commit_ID")));
+			    		
+			    	}
+			    	
+		    	}
+		   
+		    	
+		    	// Now loop through the created appID object and created a bunch of permission objects
+		    	
+		    	for(int a=0; a<appIDList.size(); a++){
+		    		
+		    		//System.out.println("AppID" + appIDList.get(a).getAppID() + " CommitID: "+ appIDList.get(a).();
+		    		
+		    		for(int b=0; b<appIDList.get(a).getCommitInfo().size(); b++){
+		    			System.out.println("AppID" + appIDList.get(a).getAppID() + " CommitID: "+ appIDList.get(a).getCommitInfo().get(b));
 		    		}
+		    		
+		    		
+		    	}
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    	
+		    //	System.out.println(appIDList.get(0).getCommitInfo().size());
+		    	
+		    	
+		    	
+		    //	System.out.println(appIDCommitListList.size());
+		    	
+		    	// Loop through this list and build up the permissions for each pair
+		    	//for(int a=0; a<appIDCommitListList.size(); a++){
+		    		//System.out.println(appIDCommitListList.get(i).getCommitID());
 		    		
 		    	
 		    		
 		    		
-		    	}
+		    		
+		    		
+		    		
+		    		
+		    		
+		   // 	}
 		    	
 		    	
 		    	
