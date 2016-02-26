@@ -7,7 +7,11 @@ public class CommitAnalyzerSuper {
 		
 		CommitAnalyzerSuper cas = new CommitAnalyzerSuper();
 		//cas.Run();
-		cas.dbConnect();
+//		cas.dbConnect();
+		
+		
+		// PrepDB(); // Prepare the database for inserting values
+		cas.buildChangeList();
 	}
 
 	
@@ -16,6 +20,79 @@ public class CommitAnalyzerSuper {
 	}
 	
 	
+	// Create the list of changes made to the DB
+	private void buildChangeList(){
+		
+		//1) Loop through all the commits
+		
+		
+		// select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view
+		
+		Connection c = null;
+	    Statement stmt = null;
+		 try {
+		    	Class.forName("org.sqlite.JDBC");
+		      
+		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
+		    	c.setAutoCommit(false);
+		
+		    	
+		    	stmt = c.createStatement();
+		    	 String sql1a="select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view";
+		    	 ResultSet rs2 = stmt.executeQuery( sql1a );
+		    	 
+		    	 // Loop through the DB
+		    	 while (rs2.next()) {
+		    		 System.out.println(rs2.getString("Permission_ID"));
+		    		 
+		    	 }
+		    	
+		
+		   } catch ( Exception e ) {
+			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			      System.exit(0);
+			    }
+		
+		
+	}
+	
+	
+	
+	
+	// Go through and build a list of all permission in each commit. This will tell you what changes
+	
+	
+	
+	private void PrepDB(){
+		
+		
+		// temporarily clear the record table. This is just for debugging
+		
+		Connection c = null;
+	    Statement stmt = null;
+		 try {
+		    	Class.forName("org.sqlite.JDBC");
+		      
+		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
+		    	c.setAutoCommit(false);
+		    	
+		    	
+		    	stmt = c.createStatement();
+		        String sql = "delete from Android_Manifest_Commit_Changes";
+		        System.out.println(sql);
+		        stmt.executeUpdate(sql);
+		        c.commit();
+		    	
+		    } catch ( Exception e ) {
+			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			      System.exit(0);
+			    }
+		
+	}
+	
+	
+	
+	// good for testing
 	private void dbConnect(){
 		
 		Connection c = null;
@@ -23,7 +100,7 @@ public class CommitAnalyzerSuper {
 		 try {
 		    	Class.forName("org.sqlite.JDBC");
 		      
-		    	c = DriverManager.getConnection("jdbc:sqlite:E:\\Dropbox\\confpapers\\AndroidData\\F-Droid_LifeCycles\\data\\AndrosecData.sqlite");
+		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
 		    	c.setAutoCommit(false);
 		    	
 		    
