@@ -46,53 +46,37 @@ public class CommitAnalyzerSuper {
 		    	//ResultSet rs2 = stmt.executeQuery( sql1a );
 		    	
 		    	
-		    	// Get every AppID
-		    	String sqlAppID="select distinct(appID) as appID from ManifestPermissionCommitt_view where appID =10";
-		    	ResultSet rsAppID = stmt.executeQuery( sqlAppID );
 		    	
-		    	 while (rsAppID.next()) {	
-//		    		 System.out.println(rsAppID.getString("appID")); 
-		    		 
-		    		 
-		    		 // now build the list of commits
-		    		 
-		    		 String sqlCommitID="select distinct(commit_ID) as commitID from ManifestPermissionCommitt_view where appID=" +Integer.parseInt(rsAppID.getString("appID")) ;
-		    		 ResultSet rsCommitID = stmt.executeQuery( sqlCommitID );
-		    		 
-		    		 
-		    		 while (rsCommitID.next()) {
-		    			// System.out.println(rsAppID.getString("commitID"));
-		    			 
-		    			 // get all the permissions for each commit ID
-		    			 String sqlPermissions="select Commit_ID as commitID, Permission_ID from ManifestPermissionCommitt_view where commit_ID= " + Integer.parseInt(rsAppID.getString("commitID"));
-			    		 ResultSet rsPermissions = stmt.executeQuery( sqlPermissions );
-			    		/*
-			    		 while (rsCommitID.next()) {
-			    			 //System.out.println(rsAppID.getString("Permission_ID"));
-			    			 // Add these permissions to the current list
-			    			 permissionsList_Current.add(Integer.parseInt(rsCommitID.getString("permission_ID")));
-			    		
-			    		 
-			    		 }
-			    		 */
-			    		 System.out.println(rsAppID.getString("appID"));
-			    		
-			    		 
-			    		 
-			    		 //rsCommitID.close();
-		    			 
-			    		
-			    		// showList(permissionsList_Current);
-		    			// System.exit(0);
-		    			 
-			    		 
-		    			 
-		    			 
-		    		 }
-		    		 
-		    		 
-		    		 
-		    	 }
+		    	
+		    
+		    	String sqlAllApps="select * from ManifestPermissionCommitt_view where appID =10";
+		    	ResultSet rsAllApps = stmt.executeQuery( sqlAllApps );
+		    	
+		    	while (rsAllApps.next()) {
+		    		//System.out.println(rsAllApps.getString("commit_ID"));
+		    		
+		    		// Check to see if there is a new app ID
+		    		if(Integer.parseInt(rsAllApps.getString("appID"))!=AppID){
+		    			AppID=Integer.parseInt(rsAllApps.getString("appID"));
+		    			commitID=-1;
+		    			
+		    			// add all permissions as new
+		    			System.out.println("dan");
+		    		
+		    		
+		    		// if new commit ID
+		    		
+		    			
+		    			
+		    			
+		    		}
+		    		
+		    	
+		    		
+		    		
+		    	}
+		    	
+		    	
 		    	
 		    	
 		    	
