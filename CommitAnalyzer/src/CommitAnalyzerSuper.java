@@ -10,10 +10,16 @@ import java.util.List;
 
 public class CommitAnalyzerSuper {
 
+	
+	
+	Util u = new Util();
+	
 //	private final String DbLocation = "E:\\Dropbox\\confpapers\\AndroidData\\F-Droid_LifeCycles\\data\\AndrosecData.sqlite";
 	private final String DbLocation = "/Users/dxkvse/Dropbox/confpapers/AndroidData/F-Droid_LifeCycles/data/AndrosecData.sqlite";
 		
 	private int statementCount=0;
+	private final String SQLOutput ="SQLoutput.txt";
+	
 	
 	
 	// create list of all dbInserts -- Prevents locking
@@ -34,6 +40,10 @@ public class CommitAnalyzerSuper {
 	
 	// Create the list of changes made to the DB
 	private void buildChangeList(){
+		
+		
+		// Clear contents of logging file
+		u.clearFile(SQLOutput);
 		
 		int AppID=-1; 	//define the initial appID
 		int commitID=-1;//define the initial commitID
@@ -105,7 +115,7 @@ public class CommitAnalyzerSuper {
 	
 		 
 		 for(int z=0; z<insertStatements.size(); z++){
-			// addManifestChange(insertStatements.get(z).toString());
+			 addManifestChange(insertStatements.get(z).toString());
 			// System.out.println(insertStatements.size());
 		 }
 		 
@@ -116,18 +126,18 @@ public class CommitAnalyzerSuper {
 	
 	
 	private void addManifestChange(String sql){
-		System.out.println("add change " + sql);
+		System.out.println("add change: " + sql);
 		
 		
 		 PrintWriter out = null;
 		try {
-			out = new PrintWriter(new FileWriter("output.txt", true), true);
+			out = new PrintWriter(new FileWriter(SQLOutput, true), true);
 			
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	      out.write(sql);
+	      out.write(sql+"\n");
 	      out.close();
 		
 		
@@ -255,7 +265,7 @@ public class CommitAnalyzerSuper {
 	private void getMissing(List la, List lb, int appID, int commitID){
 		List removed = getMissingListValues(la, lb);
 		for(int i=0; i<removed.size(); i++){
-			System.out.println("appID: " + appID + " CommitID:" + commitID + " permissionID:" + );
+			System.out.println("appID: " + appID + " CommitID:" + commitID);
 			alterAndroid_Manifest_Commit_Changes(appID, commitID, Integer.parseInt(removed.get(i).toString()), "R");
 			statementCount = statementCount+1;
 		}

@@ -1,0 +1,1 @@
+insert into Android_Manifest_Commit_Changes (AppID, CommitID, PermissionID, Action) values (1,2,1,'A');insert into Android_Manifest_Commit_Changes (AppID, CommitID, PermissionID, Action) values (1,2,2,'A');
