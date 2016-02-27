@@ -35,7 +35,7 @@ public class CommitAnalyzerSuper {
 		List permissionsList_Prev = new ArrayList();
 		
 		int counter=0;
-		// select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view
+	
 		
 		Connection c = null;
 	    Statement stmt = null;
@@ -85,103 +85,16 @@ public class CommitAnalyzerSuper {
 		    			 }
 		    			 counter++;
 		    		 }
-		    		 
-		    		 
-		    		 
-		    		 
-		    		 
-		    		 
-		    		// Loop through all view records
-				    	
-				    	
-				    	// If new appID
-				    	
-					    	// Do the comparision of the old and new temps
-					    	// set the old = new 
-				    		// Clear out new
-					    	
-					    	//	Set appID=new
-					    	//	Set commitID = new
-					    	// 	Add the permission to the list
-					    	
-				    	
-				    	
-				    	// if not new appID
-				    	
-				    		// if new commitID
-				    			// set commitID= new
-				    	 		//Do the comparision of the old and new temps
-					    		// set the old = new 
-				    			// Clear out new
-				    			// Add the new permission to the list
-				    	
-				    		// If not new commit iD
-				    			// Add the permission to the list
-		    		 
-		    		 
-		    		 
-		    		 
-		    		 
-		    		 
-		    		 
+
+		   		 
 		    	 }
-	//	    	System.out.println("done");
-	//	    	System.out.println(permissionsList_Prev.size());
-	//	    	System.out.println(permissionsList_Current.size());
+	
+		    	 
 		    	 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
-		    
-		    
-		    	
-		    	
-		    	
-		  
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    //	System.out.println(appIDList.get(0).getCommitInfo().size());
-		    	
-		    	
-		    	
-		    //	System.out.println(appIDCommitListList.size());
-		    	
-		    	// Loop through this list and build up the permissions for each pair
-		    	//for(int a=0; a<appIDCommitListList.size(); a++){
-		    		//System.out.println(appIDCommitListList.get(i).getCommitID());
-		    		
-		    	
-		    		
-		    		
-		    		
-		    		
-		    		
-		    		
-		    		
-		   // 	}
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	//inside every app id, get every commit
-		    	//build the permissions for each commit
-		    	// At the end, compoare the list of permissions in the commit to the old list
-		    	// Log the differences
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
-		    	
+
+		    	 System.out.println(counter);
+    	
+
 		    	
 		   } catch ( Exception e ) {
 			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
