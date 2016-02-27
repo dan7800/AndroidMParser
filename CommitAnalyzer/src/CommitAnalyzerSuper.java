@@ -43,9 +43,9 @@ public class CommitAnalyzerSuper {
 	// Create the list of changes made to the DB
 	private void buildChangeList(){
 		
-		
 		// Clear contents of logging file
 		u.clearFile(SQLOutput);
+		clearDB();
 		
 		int AppID=-1; 	//define the initial appID
 		int commitID=-1;//define the initial commitID
@@ -121,7 +121,7 @@ public class CommitAnalyzerSuper {
 			    }
 	
 	
-		 
+		 // Create a set of insert statements since this could be used for debugging
 		 for(int z=0; z<insertStatements.size(); z++){
 			 addManifestChange(insertStatements.get(z).toString());
 		 }
@@ -132,8 +132,9 @@ public class CommitAnalyzerSuper {
 	
 	
 	
+	// Log all the created insert statements to the log file and then put them into the database
 	private void addManifestChange(String sql){
-		System.out.println("add change: " + sql);
+//		System.out.println("add change: " + sql);
 		
 		
 		 PrintWriter out = null;
@@ -146,11 +147,7 @@ public class CommitAnalyzerSuper {
 		}
 	      out.write(sql+"\n");
 	      out.close();
-		
-	      
-	      
-		
-		
+
 		Connection c = null;
 	    Statement stmt = null;
 		 try {
@@ -164,7 +161,7 @@ public class CommitAnalyzerSuper {
 		        stmt.executeUpdate(sql);
 		        c.commit();
 		    	
-		        
+		        // Make sure to close the connections to prevent locking
 		        stmt.close();
 		        c.close();
 		        
@@ -173,88 +170,11 @@ public class CommitAnalyzerSuper {
 			      System.exit(0);
 			    }
 		
-		
-		
 	}
 	
-	
-	private void showList(List list){
-		StringBuilder sb = new StringBuilder();
-		for (int i=0; i<list.size();i++){
-			//System.out.println(list.get(i));
-			sb.append(list.get(i));
-			sb.append(",");
-		}
-		System.out.println(sb.toString());
-	}
-
-
 
 	// Go through and build a list of all permission in each commit. This will tell you what changes
 		
-	private void PrepDB(){
-		
-		
-		// temporarily clear the record table. This is just for debugging
-		
-		Connection c = null;
-	    Statement stmt = null;
-		 try {
-		    	Class.forName("org.sqlite.JDBC");
-		      
-		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
-		    	c.setAutoCommit(false);
-		    	
-		    	
-		    	stmt = c.createStatement();
-		        String sql = "delete from Android_Manifest_Commit_Changes";
-		        System.out.println(sql);
-		        stmt.executeUpdate(sql);
-		        c.commit();
-		    	
-		    } catch ( Exception e ) {
-			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-			      System.exit(0);
-			    }
-		
-	}
-	
-	
-	
-	
-	// make the necessary changes 
-	private void alterAndroid_Manifest_Commit_Changes(int appID, int commitID, int permissionID, String change){
-		//System.out.println(appID + " " +commitID+ " " + permissionID+ " " + change);
-		
-
-		String sql = "insert into Android_Manifest_Commit_Changes (AppID, CommitID, PermissionID, Action) values ("+appID+","+commitID+","+permissionID+",'"+change+"');";
-		insertStatements.add(sql);
-		
-		/*
-		Connection c = null;
-	    Statement stmt = null;
-		 try {
-		    	Class.forName("org.sqlite.JDBC");
-		      
-		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
-		    	c.setAutoCommit(false);
-		    	
-		    	
-		    	stmt = c.createStatement();
-		       // String sql = "delete from Android_Manifest_Commit_Changes";
-		    	String sql = "insert into Android_Manifest_Commit_Changes (AppID, CommitID, PermissionID, Action) values ("+appID+","+commitID+","+permissionID+",'"+change+"');";
-		        stmt.executeUpdate(sql);
-		        c.commit();
-		    	
-		    } catch ( Exception e ) {
-			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
-			      System.exit(0);
-			    }
-		
-		*/
-	}
-	
-	
 	private void AnalyzeLists(List la, List lb, int appID, int commitID){
 	//	System.out.println("**********analyze Lists********" + la.size() + " " + lb.size());
 		// get what was added
@@ -307,6 +227,33 @@ public class CommitAnalyzerSuper {
 		toReturn.removeAll(lb);
 		return toReturn;
 	}
+	
+	// Clear the record table. This is just for cleaning up old results
+	private void clearDB(){
+		
+		System.out.println("*** Clear DB table: Android_Manifest_Commit_Changes");
+		
+		Connection c = null;
+	    Statement stmt = null;
+		 try {
+		    	Class.forName("org.sqlite.JDBC");
+		      
+		    	c = DriverManager.getConnection("jdbc:sqlite:"+DbLocation);
+		    	c.setAutoCommit(false);
+		    	
+		    	stmt = c.createStatement();
+		        String sql = "delete from Android_Manifest_Commit_Changes";
+		        System.out.println(sql);
+		        stmt.executeUpdate(sql);
+		        c.commit();
+		    	
+		    } catch ( Exception e ) {
+			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
+			      System.exit(0);
+			    }
+		
+	}
+
 		
 	}
 	

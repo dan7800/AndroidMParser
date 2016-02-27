@@ -1,5 +1,6 @@
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.List;
 
 
 public class Util {
@@ -18,5 +19,18 @@ public class Util {
 		pw.close();
 	}
 	
+	
+	// only used for debugging
+	public void showList(List list){
+		StringBuilder sb = new StringBuilder();
+		for (int i=0; i<list.size();i++){
+			//System.out.println(list.get(i));
+			sb.append(list.get(i));
+			sb.append(",");
+		}
+		System.out.println(sb.toString());
+	}
+
+
 	
 }
