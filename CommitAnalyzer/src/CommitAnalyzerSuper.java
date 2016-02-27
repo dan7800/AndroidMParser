@@ -10,6 +10,11 @@ import java.util.List;
 
 public class CommitAnalyzerSuper {
 
+	/*
+	 * How to pick up if all permissions are removed in a manifest commit
+	 * 
+	 * 
+	 */
 	
 	
 	Util u = new Util();
@@ -31,9 +36,6 @@ public class CommitAnalyzerSuper {
 		CommitAnalyzerSuper cas = new CommitAnalyzerSuper();
 		// PrepDB(); // Prepare the database for inserting values
 		cas.buildChangeList();
-		
-		
-		
 		
 	}
 	
@@ -107,6 +109,12 @@ public class CommitAnalyzerSuper {
 		    	 AnalyzeLists(permissionsList_Prev, permissionsList_Current, AppID, commitID);
 		    	// System.out.println("Final count:" + counter);
 
+		    	 // close all the connections so the information can be written to the DB
+		    	 stmt.close();
+		    	 rsAllApps.close();
+		    	 c.close();
+		    	 
+		    	 
 		   } catch ( Exception e ) {
 			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			      System.exit(0);
@@ -116,7 +124,6 @@ public class CommitAnalyzerSuper {
 		 
 		 for(int z=0; z<insertStatements.size(); z++){
 			 addManifestChange(insertStatements.get(z).toString());
-			// System.out.println(insertStatements.size());
 		 }
 		 
 			
@@ -140,8 +147,10 @@ public class CommitAnalyzerSuper {
 	      out.write(sql+"\n");
 	      out.close();
 		
+	      
+	      
 		
-		/*
+		
 		Connection c = null;
 	    Statement stmt = null;
 		 try {
@@ -155,12 +164,16 @@ public class CommitAnalyzerSuper {
 		        stmt.executeUpdate(sql);
 		        c.commit();
 		    	
+		        
+		        stmt.close();
+		        c.close();
+		        
 		    } catch ( Exception e ) {
 			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			      System.exit(0);
 			    }
-	
-		*/
+		
+		
 		
 	}
 	
@@ -205,6 +218,8 @@ public class CommitAnalyzerSuper {
 			    }
 		
 	}
+	
+	
 	
 	
 	// make the necessary changes 
@@ -255,8 +270,12 @@ public class CommitAnalyzerSuper {
 		// Loop through each of the items and then add them to the db
 		List added = getAddedListValues(la, lb, appID, commitID);
 		for(int i=0; i<added.size(); i++){
-			System.out.println("Added:" + added.get(i) + " appID: " + appID + " CommitID:" + commitID);
-			alterAndroid_Manifest_Commit_Changes(appID, commitID, Integer.parseInt(added.get(i).toString()), "A");
+			System.out.println("Added: appID: " + appID + " CommitID:" + commitID + " perm: " + added.get(i));
+			//alterAndroid_Manifest_Commit_Changes(appID, commitID, Integer.parseInt(added.get(i).toString()), "A");
+			
+			String sql = "insert into Android_Manifest_Commit_Changes (AppID, CommitID, PermissionID, Action) values ("+appID+","+commitID+","+added.get(i)+",'A');";
+			insertStatements.add(sql);
+			
 			statementCount = statementCount+1;
 		}
 	}
@@ -265,8 +284,11 @@ public class CommitAnalyzerSuper {
 	private void getMissing(List la, List lb, int appID, int commitID){
 		List removed = getMissingListValues(la, lb);
 		for(int i=0; i<removed.size(); i++){
-			System.out.println("appID: " + appID + " CommitID:" + commitID);
-			alterAndroid_Manifest_Commit_Changes(appID, commitID, Integer.parseInt(removed.get(i).toString()), "R");
+			System.out.println("Removed: appID: " + appID + " CommitID:" + commitID + " perm: " + removed.get(i));
+		//	alterAndroid_Manifest_Commit_Changes(appID, commitID, Integer.parseInt(removed.get(i).toString()), "R");
+			String sql = "insert into Android_Manifest_Commit_Changes (AppID, CommitID, PermissionID, Action) values ("+appID+","+commitID+","+removed.get(i)+",'R');";
+			insertStatements.add(sql);
+			
 			statementCount = statementCount+1;
 		}
 	}
