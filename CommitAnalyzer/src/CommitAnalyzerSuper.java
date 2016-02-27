@@ -4,18 +4,13 @@ import java.util.List;
 
 public class CommitAnalyzerSuper {
 
-	private final String DbLocation = "E:\\Dropbox\\confpapers\\AndroidData\\F-Droid_LifeCycles\\data\\AndrosecData.sqlite";
-	
-	private List<appIDInfo> appIDList=new ArrayList<appIDInfo>();
-	
+//	private final String DbLocation = "E:\\Dropbox\\confpapers\\AndroidData\\F-Droid_LifeCycles\\data\\AndrosecData.sqlite";
+	private final String DbLocation = "/Users/dxkvse/Dropbox/confpapers/AndroidData/F-Droid_LifeCycles/data/AndrosecData.sqlite";
+		
 	
 	public static void main(String[] args) {
 		
 		CommitAnalyzerSuper cas = new CommitAnalyzerSuper();
-		//cas.Run();
-//		cas.dbConnect();
-		
-		
 		// PrepDB(); // Prepare the database for inserting values
 		cas.buildChangeList();
 	}
@@ -25,8 +20,6 @@ public class CommitAnalyzerSuper {
 	// Create the list of changes made to the DB
 	private void buildChangeList(){
 		
-		//1) Loop through all the commits
-		
 		int AppID=-1; 	//define the initial appID
 		int commitID=-1;//define the initial commitID
 		
@@ -34,9 +27,8 @@ public class CommitAnalyzerSuper {
 		List permissionsList_Current = new ArrayList();
 		List permissionsList_Prev = new ArrayList();
 		
-		int counter=0;
+		int counter=0; // See how many values were examined
 	
-		
 		Connection c = null;
 	    Statement stmt = null;
 		 try {
@@ -46,8 +38,8 @@ public class CommitAnalyzerSuper {
 		    	c.setAutoCommit(false);
 		
 		    	stmt = c.createStatement();
-		    	String sqlAllApps="select * from ManifestPermissionCommitt_view";
-		    	//String sqlAllApps="select * from dummy";
+		    	//String sqlAllApps="select * from ManifestPermissionCommitt_view";
+		    	final String sqlAllApps="select * from dummy";
 		    	ResultSet rsAllApps = stmt.executeQuery( sqlAllApps );
 		    	
 		    	 while (rsAllApps.next()) {
@@ -65,7 +57,6 @@ public class CommitAnalyzerSuper {
 		    			 permissionsList_Prev.clear();
 		    			 
 		    			 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
-		    	//		 showList(permissionsList_Current);
 		    			 
 		    		 }else{ // not new AppID
 
@@ -85,23 +76,16 @@ public class CommitAnalyzerSuper {
 		    			 }
 		    			 counter++;
 		    		 }
-
 		   		 
 		    	 }
 	
-		    	 
 		    	 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
-
 		    	 System.out.println(counter);
-    	
 
-		    	
 		   } catch ( Exception e ) {
 			      System.err.println( e.getClass().getName() + ": " + e.getMessage() );
 			      System.exit(0);
 			    }
-		
-		
 	}
 	
 	
@@ -112,12 +96,11 @@ public class CommitAnalyzerSuper {
 			sb.append(list.get(i));
 			sb.append(",");
 		}
-	
 		System.out.println(sb.toString());
 	}
-	
-	
-	
+
+
+
 	// Go through and build a list of all permission in each commit. This will tell you what changes
 		
 	private void PrepDB(){
