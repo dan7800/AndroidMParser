@@ -46,58 +46,109 @@ public class CommitAnalyzerSuper {
 		    	c.setAutoCommit(false);
 		
 		    	stmt = c.createStatement();
-		    	//String sql1a="select Permission_ID, commit_ID, appID, commit_date from ManifestPermissionCommitt_view where appID =1121";
-		    	//ResultSet rs2 = stmt.executeQuery( sql1a );
-		    	
-		    	
-		    	
-		    	
-		    
-		    	String sqlAllApps="select distinct(commit_ID) as commit_ID, appID from ManifestPermissionCommitt_view where appid =35";
+		    	String sqlAllApps="select * from ManifestPermissionCommitt_view";
+		    	//String sqlAllApps="select * from dummy";
 		    	ResultSet rsAllApps = stmt.executeQuery( sqlAllApps );
 		    	
-		    	while (rsAllApps.next()) {
-		    		// build list of all appids
-		    		
-		    		//appIDCommitListList.add(new AppIDCommitPair(Integer.parseInt(rsAllApps.getString("appID")), Integer.parseInt(rsAllApps.getString("Commit_ID"))));	
-		    		appIDList.add(new appIDInfo(Integer.parseInt(rsAllApps.getString("appID"))));
-		    	
-		    	}
-		    	
+		    	 while (rsAllApps.next()) {
+		    		 
+		    		 if(Integer.parseInt(rsAllApps.getString("appID"))!=AppID){
+	//	    			 System.out.println("57");
+		    			 if(AppID > 0){ // don't run the 1st time
+		    				// System.out.println("588888888888888888");
+		    				 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
+		    			 }
+		    			
+		    			 AppID=Integer.parseInt(rsAllApps.getString("appID"));
+		    			 commitID=Integer.parseInt(rsAllApps.getString("commit_ID"));
+
+		    			 permissionsList_Current.clear();
+		    			 permissionsList_Prev.clear();
+		    			 
+		    			 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
+		    	//		 showList(permissionsList_Current);
+		    			 
+		    		 }else{ // not new AppID
+//		    			 System.out.println("70");
+		    			 // check to see if the permission ID is new
+	//	    			 System.out.println(commitID + "- " + Integer.parseInt(rsAllApps.getString("Commit_ID")));
+		    			 if(Integer.parseInt(rsAllApps.getString("Commit_ID"))!=commitID){  // new commitID
+		    				 commitID=Integer.parseInt(rsAllApps.getString("commit_ID"));
+		    				 
+//		    				 System.out.println("75");
+		    				 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
+		    			//	 System.out.println("1Here" + permissionsList_Prev.size() + "-" + permissionsList_Current.size());
+			    			
+		    				// showList(permissionsList_Current);
+		    				// System.exit(0);
+		    				// permissionsList_Prev = permissionsList_Current;
+		    				 
+		    				 permissionsList_Prev.clear();
+		    				 permissionsList_Prev.addAll(permissionsList_Current);
+		    				 permissionsList_Current.clear();
+		    	//			 System.out.println("Add permission - " + rsAllApps.getString("permission_ID"));
+		    				 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
+		    				 
+		    			 }else{ // Commit ID is not new
+//		    				 System.out.println("82");
+		    //				 System.out.println("Add permission - " + rsAllApps.getString("permission_ID"));
+		    				 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
+		    				// showList(permissionsList_Current);
+		    				 
+		    			 }
+		    			 
+		    		 }
+		    		 
+		    		 
+		    		 
+		    		 
+		    		 
+		    		 
+		    		// Loop through all view records
+				    	
+				    	
+				    	// If new appID
+				    	
+					    	// Do the comparision of the old and new temps
+					    	// set the old = new 
+				    		// Clear out new
+					    	
+					    	//	Set appID=new
+					    	//	Set commitID = new
+					    	// 	Add the permission to the list
+					    	
+				    	
+				    	
+				    	// if not new appID
+				    	
+				    		// if new commitID
+				    			// set commitID= new
+				    	 		//Do the comparision of the old and new temps
+					    		// set the old = new 
+				    			// Clear out new
+				    			// Add the new permission to the list
+				    	
+				    		// If not new commit iD
+				    			// Add the permission to the list
+		    		 
+		    		 
+		    		 
+		    		 
+		    		 
+		    		 
+		    		 
+		    	 }
+	//	    	System.out.println("done");
+	//	    	System.out.println(permissionsList_Prev.size());
+	//	    	System.out.println(permissionsList_Current.size());
+		    	 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
+		    
+		    
 
 		    	
 		    	
 		    	
-		   
-		    	// now loop through the created objects and add all commit items
-		    	for(int a=0; a<appIDList.size(); a++){
-		    		String sqlAppInfo="select * from ManifestPermissionCommitt_view where appid =" + appIDList.get(a).getAppID();
-			    //	System.out.println(sqlAppInfo);
-		    		ResultSet rsAppInfo = stmt.executeQuery( sqlAppInfo );
-		    		
-			    	while (rsAppInfo.next()) {
-			    	//	System.out.println("add item");
-			    		// add the commitInfo to the list
-			    		appIDList.get(a).addCommitInfoList(Integer.parseInt(rsAppInfo.getString("Commit_ID")));
-			    		
-			    	}
-			    	
-		    	}
-		   
-		    	
-		    	// Now loop through the created appID object and created a bunch of permission objects
-		    	
-		    	for(int a=0; a<appIDList.size(); a++){
-		    		
-		    		//System.out.println("AppID" + appIDList.get(a).getAppID() + " CommitID: "+ appIDList.get(a).();
-		    		
-		    		for(int b=0; b<appIDList.get(a).getCommitInfo().size(); b++){
-		    			System.out.println("AppID" + appIDList.get(a).getAppID() + " CommitID: "+ appIDList.get(a).getCommitInfo().get(b));
-		    		}
-		    		
-		    		
-		    	}
-		    	
+		  
 		    	
 		    	
 		    	
@@ -156,9 +207,14 @@ public class CommitAnalyzerSuper {
 	
 	
 	private void showList(List list){
+		StringBuilder sb = new StringBuilder();
 		for (int i=0; i<list.size();i++){
-			System.out.println(list.get(i));
+			//System.out.println(list.get(i));
+			sb.append(list.get(i));
+			sb.append(",");
 		}
+	
+		System.out.println(sb.toString());
 	}
 	
 	
@@ -194,7 +250,7 @@ public class CommitAnalyzerSuper {
 	
 	
 	private void AnalyzeLists(List la, List lb){
-	
+		System.out.println("**********analyze Lists********" + la.size() + " " + lb.size());
 		// get what was added
 		getAdded(la, lb);
 		getMissing(la, lb);
