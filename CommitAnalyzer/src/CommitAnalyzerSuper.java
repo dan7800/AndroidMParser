@@ -34,7 +34,7 @@ public class CommitAnalyzerSuper {
 		List permissionsList_Current = new ArrayList();
 		List permissionsList_Prev = new ArrayList();
 		
-		
+		int counter=0;
 		// select Permission_ID, appID, commit_date from ManifestPermissionCommitt_view
 		
 		Connection c = null;
@@ -53,9 +53,8 @@ public class CommitAnalyzerSuper {
 		    	 while (rsAllApps.next()) {
 		    		 
 		    		 if(Integer.parseInt(rsAllApps.getString("appID"))!=AppID){
-	//	    			 System.out.println("57");
+
 		    			 if(AppID > 0){ // don't run the 1st time
-		    				// System.out.println("588888888888888888");
 		    				 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
 		    			 }
 		    			
@@ -69,34 +68,22 @@ public class CommitAnalyzerSuper {
 		    	//		 showList(permissionsList_Current);
 		    			 
 		    		 }else{ // not new AppID
-//		    			 System.out.println("70");
-		    			 // check to see if the permission ID is new
-	//	    			 System.out.println(commitID + "- " + Integer.parseInt(rsAllApps.getString("Commit_ID")));
+
 		    			 if(Integer.parseInt(rsAllApps.getString("Commit_ID"))!=commitID){  // new commitID
 		    				 commitID=Integer.parseInt(rsAllApps.getString("commit_ID"));
 		    				 
-//		    				 System.out.println("75");
 		    				 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
-		    			//	 System.out.println("1Here" + permissionsList_Prev.size() + "-" + permissionsList_Current.size());
-			    			
-		    				// showList(permissionsList_Current);
-		    				// System.exit(0);
-		    				// permissionsList_Prev = permissionsList_Current;
-		    				 
+
 		    				 permissionsList_Prev.clear();
 		    				 permissionsList_Prev.addAll(permissionsList_Current);
 		    				 permissionsList_Current.clear();
-		    	//			 System.out.println("Add permission - " + rsAllApps.getString("permission_ID"));
 		    				 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
 		    				 
 		    			 }else{ // Commit ID is not new
-//		    				 System.out.println("82");
-		    //				 System.out.println("Add permission - " + rsAllApps.getString("permission_ID"));
 		    				 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
-		    				// showList(permissionsList_Current);
 		    				 
 		    			 }
-		    			 
+		    			 counter++;
 		    		 }
 		    		 
 		    		 
@@ -144,7 +131,6 @@ public class CommitAnalyzerSuper {
 		    	 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
 		    
 		    
-
 		    	
 		    	
 		    	
