@@ -75,7 +75,7 @@ public class CommitAnalyzerSuper {
 		    				 AnalyzeLists(permissionsList_Prev, permissionsList_Current);
 
 		    				 permissionsList_Prev.clear();
-		    				 permissionsList_Prev.addAll(permissionsList_Current);
+		    				 permissionsList_Prev.addAll(permissionsList_Current); // setting them to be equal creates problems
 		    				 permissionsList_Current.clear();
 		    				 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
 		    				 
