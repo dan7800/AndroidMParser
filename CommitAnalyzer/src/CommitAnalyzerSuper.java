@@ -25,9 +25,7 @@ public class CommitAnalyzerSuper {
 	private int statementCount=0;
 	private final String SQLOutput ="SQLoutput.txt";
 	
-	
-	
-	// create list of all dbInserts -- Prevents locking
+	// create list of all dbInserts. Done in this way to try to eliminate potential locking and help debugging
 	private List insertStatements = new ArrayList();
 	
 	
@@ -65,12 +63,15 @@ public class CommitAnalyzerSuper {
 		    	c.setAutoCommit(false);
 		
 		    	stmt = c.createStatement();
-		  //  	String sqlAllApps="select * from ManifestPermissionCommitt_view";
-		    	final String sqlAllApps="select * from dummy";
+		    	final String sqlAllApps="select * from ManifestPermissionCommitt_view where appID <11";
+		  //  	final String sqlAllApps="select * from dummy"; // temp information
+		    	
+
 		    	ResultSet rsAllApps = stmt.executeQuery( sqlAllApps );
 		    	
 		    	 while (rsAllApps.next()) {
-		    		 
+		    //		 System.out.println(rsAllApps.getString("commit_ID"));
+		    		// System.out.println("77");
 		    		 if(Integer.parseInt(rsAllApps.getString("appID"))!=AppID){
 
 		    			 if(AppID > 0){ // don't run the 1st time
@@ -82,24 +83,26 @@ public class CommitAnalyzerSuper {
 
 		    			 permissionsList_Current.clear();
 		    			 permissionsList_Prev.clear();
-		    			 
+
+		    			 // The appID is the initial appID
+
 		    			 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
+
 		    			 
 		    		 }else{ // not new AppID
 
 		    			 if(Integer.parseInt(rsAllApps.getString("Commit_ID"))!=commitID){  // new commitID
-		    				 commitID=Integer.parseInt(rsAllApps.getString("commit_ID"));
 		    				 
 		    				 AnalyzeLists(permissionsList_Prev, permissionsList_Current, AppID, commitID);
-
+		    				 commitID=Integer.parseInt(rsAllApps.getString("commit_ID"));
 		    				 permissionsList_Prev.clear();
 		    				 permissionsList_Prev.addAll(permissionsList_Current); // setting them to be equal creates problems
 		    				 permissionsList_Current.clear();
 		    				 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
 		    				 
 		    			 }else{ // Commit ID is not new
+		    				
 		    				 permissionsList_Current.add(Integer.parseInt(rsAllApps.getString("permission_ID")));
-		    				 
 		    			 }
 		    			 counter++;
 		    		 }
@@ -109,7 +112,7 @@ public class CommitAnalyzerSuper {
 		    	 AnalyzeLists(permissionsList_Prev, permissionsList_Current, AppID, commitID);
 		    	// System.out.println("Final count:" + counter);
 
-		    	 // close all the connections so the information can be written to the DB
+		    	 // close all the connections so the information can be written to the DB. Prevent locking
 		    	 stmt.close();
 		    	 rsAllApps.close();
 		    	 c.close();
@@ -121,12 +124,13 @@ public class CommitAnalyzerSuper {
 			    }
 	
 	
+		// System.exit(0);
+		 
 		 // Create a set of insert statements since this could be used for debugging
 		 for(int z=0; z<insertStatements.size(); z++){
 			 addManifestChange(insertStatements.get(z).toString());
 		 }
 		 
-			
 		System.out.println("Statement count " + statementCount);
 	}
 	
@@ -134,9 +138,9 @@ public class CommitAnalyzerSuper {
 	
 	// Log all the created insert statements to the log file and then put them into the database
 	private void addManifestChange(String sql){
-//		System.out.println("add change: " + sql);
+		System.out.println("add change: " + sql);
 		
-		
+		/*
 		 PrintWriter out = null;
 		try {
 			out = new PrintWriter(new FileWriter(SQLOutput, true), true);
@@ -147,7 +151,7 @@ public class CommitAnalyzerSuper {
 		}
 	      out.write(sql+"\n");
 	      out.close();
-
+*/
 		Connection c = null;
 	    Statement stmt = null;
 		 try {
@@ -174,7 +178,6 @@ public class CommitAnalyzerSuper {
 	
 
 	// Go through and build a list of all permission in each commit. This will tell you what changes
-		
 	private void AnalyzeLists(List la, List lb, int appID, int commitID){
 	//	System.out.println("**********analyze Lists********" + la.size() + " " + lb.size());
 		// get what was added
@@ -204,7 +207,7 @@ public class CommitAnalyzerSuper {
 	private void getMissing(List la, List lb, int appID, int commitID){
 		List removed = getMissingListValues(la, lb);
 		for(int i=0; i<removed.size(); i++){
-			System.out.println("Removed: appID: " + appID + " CommitID:" + commitID + " perm: " + removed.get(i));
+//			System.out.println("Removed: appID: " + appID + " CommitID:" + commitID + " perm: " + removed.get(i));
 		//	alterAndroid_Manifest_Commit_Changes(appID, commitID, Integer.parseInt(removed.get(i).toString()), "R");
 			String sql = "insert into Android_Manifest_Commit_Changes (AppID, CommitID, PermissionID, Action) values ("+appID+","+commitID+","+removed.get(i)+",'R');";
 			insertStatements.add(sql);
