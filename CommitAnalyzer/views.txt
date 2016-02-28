@@ -87,8 +87,64 @@
 
 
 
+    %% Get frequency of permissions both added and removed
+    select permission, count(pcfv.permissionID) as permissionCount
+    from PermissionChange_FrequencyBase_view pcfv 
+    inner join Android_Manifest_Permission amp on amp.permission_ID = pcfv.permissionID
+    where action = 'A'
+    group by pcfv.permissionID
+    order by permissionCount desc
 
 
+
+
+    % Get the permission rates of apps. Look at all commits for their lifecycle
+
+    % First get the commit count
+
+      drop view CommitCount_view;
+    create view CommitCount_view as 
+    select cvb.appID as AppID, cvb.commit_ID as commitID, cvb.permissionCount as permissioncount, amc.altereddate as CommitDate, commitCount, amc.orderdate
+    from Commit_view_backwards cvb
+    inner join Android_Manifest_CommitInfo amc on amc.commit_ID = cvb.commit_ID
+    inner join (select cvb.appID as AppID, count(commit_ID) as commitCount
+    from Commit_view_backwards cvb
+    group by appID) cc on cc.appID = cvb.appID
+    where commitCount >=25
+    order by appID, commitDate asc
+
+    %% now get the commit counts for each
+    select orderDate, round(avg(permissionCount),2) as PermissionCount, count(appID) as Apps
+    from CommitCount_view
+--    where commitCount >=50 -- No use since it is show above
+    group by orderDate
+    order by orderDate
+
+
+
+
+--select * from android_Manifest_permission_join
+
+
+
+
+
+
+
+
+--select * from android_Manifest_permission_join
+
+
+
+
+
+
+
+
+
+select cvb.appID as AppID, cvb.commit_ID as commitID, cvb.permissionCount as permissioncount, amc.altereddate as CommitDate
+from Commit_view_backwards cvb
+inner join Android_Manifest_CommitInfo amc on amc.commit_ID = cvb.commit_ID
 
 
 
