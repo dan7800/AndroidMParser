@@ -1,3 +1,160 @@
-Note: These views are used with the Androsec.sqlite db. Check the Dropbox folder to ensure that the versions are in sync.
+********** Adding some commonly used queries  ********
 
-- This is largely just a backup location for these views.
+
+***
+-- Get all commit messages that have to do with permissions.
+--          The goal here is to tie the commit messages in with the permissions updates. ?
+--  ?????? > Is this even meaningful, why not just look at what is exactly added
+
+
+
+******* Get all the versions that permissions are added into
+
+
+
+%%%%% Get all the commit items
+    -- must reverse the order of the items in this list
+    drop view Commit_view_backwards;
+    create view Commit_view_backwards as
+    select   amc.appID, amc.commit_ID,amc.commit_Order, case when PermissionCount.PermissionCount is null then 0 else PermissionCount.PermissionCount end as PermissionCount, amc.commit_val, ama.appName, commit_date, amc.appID, orderdate
+    from Android_Manifest_CommitInfo amc
+
+    left outer join (
+    select count (Commit_ID) as PermissionCount, commit_ID  from Android_Manifest_permission_join ampj group by ampj.commit_ID
+    ) PermissionCount on PermissionCount.commit_ID = amc.Commit_ID
+
+    inner join Android_Manifest_AppInfo ama on ama.appID = amc.appID
+
+    order by amc.AppID, amc.commit_order desc
+
+
+
+
+%%%% Committer percentage
+
+
+
+        drop view CommitterPercentage_view;
+        create view CommitterPercentage_view as                                                                                                                                                                                        
+        select gh.appID, gh.author, gh.email,  count(author) as AuthorCount, gh2a.TotalCommitCount as totalCommit,  round((count(author)*1.00)/(gh2a.TotalCommitCount*1.00),2) as PercentCommitter
+        from githistory gh
+        inner join (select gh2.appID, count(gh2.commitID) as TotalCommitCount from githistory gh2 group by gh2.appID order by gh2.appID) gh2a on gh2a.appID = gh.appID
+
+        group by gh.AppID, gh.author
+        order by gh.appID, gh.author
+
+
+
+
+
+%%% Get the proper order of all commits into the DB
+
+      drop view ManifestPermissionCommitt_view;
+    create view ManifestPermissionCommitt_view as  
+    select  Permission_ID, gh.appID, author, email,  summary, ampj.commit_ID, commit_order,  commit_date, alteredDate
+    from android_Manifest_permission_join ampj
+    inner join githistory gh on gh.commitID = ampj.commit_ID
+
+    inner join (select appID, commit_Date, commit_Order, commit_ID, OrderDate, alteredDate 
+    from Android_Manifest_CommitInfo
+    order by altereddate asc) amc on amc.commit_ID = gh.commitID
+    order by gh.appID asc, alteredDate asc
+
+
+
+
+    %% Main permission change view
+    drop view PermissionChange_view;
+    create view PermissionChange_view as 
+    select amcc.AppID, amcc.commitID, amcc.permissionID, amcc.Action, altereddate, gh.author, gh.email, gh.summary
+    from Android_Manifest_Commit_Changes amcc
+    inner join Android_Manifest_CommitInfo amc on amc.commit_ID = amcc.commitID
+    inner join githistory gh on gh.commitID = amcc.commitID
+    order by altereddate
+
+
+
+
+
+    %%% Frequency of additions and removing
+
+    %% Base view
+    drop view PermissionChange_FrequencyBase_view;
+    create view PermissionChange_FrequencyBase_view as 
+    select pv.appID, pv.commitID, pv.PermissionID, pv.Action, cpv.author, cpv.email, cpv.authorCount, cpv.totalCommit, cpv.percentCommitter
+    from PermissionChange_view  pv
+    inner join CommitterPercentage_view cpv on cpv.appID = pv.appid and cpv.author=pv.author
+
+
+
+
+
+
+
+
+
+
+
+
+/*
+-- remember that commit ID may not be the best order of things
+select * 
+from android_Manifest_permission_join ampj
+inner join githistory gh on gh.commitID = ampj.commit_ID
+order by gh.appid, gh.commitID
+*/
+
+-- Get the % commits of each commiitter for their project
+
+
+
+
+
+
+
+
+%%%% Get all the commits where a permission was added
+
+
+
+
+
+
+
+
+*********************** 
+
+- Need to build a list of the permissions in each group
+- Need to know what changes
+
+
+1) Loop through each AppID in the list
+2) For the first list, build a list of permissions
+3) Each each subsequent list, record what changes
+
+
+********* Used for debugging *********
+
+
+
+delete from dummy;
+
+insert into dummy (appID, commit_ID, permission_ID) values (1,1,1);
+insert into dummy (appID, commit_ID, permission_ID) values (1,2,1);
+insert into dummy (appID, commit_ID, permission_ID) values (1,2,2);
+insert into dummy (appID, commit_ID, permission_ID) values (1,2,3);
+insert into dummy (appID, commit_ID, permission_ID) values (1,3,1);
+--insert into dummy (appID, commit_ID, permission_ID) values (1,3,2);
+insert into dummy (appID, commit_ID, permission_ID) values (1,3,4);
+insert into dummy (appID, commit_ID, permission_ID) values (1,3,5);
+insert into dummy (appID, commit_ID, permission_ID) values (1,4,1);
+
+
+insert into dummy (appID, commit_ID, permission_ID) values (2,1,1);
+insert into dummy (appID, commit_ID, permission_ID) values (2,2,1);
+insert into dummy (appID, commit_ID, permission_ID) values (2,2,2);
+
+insert into dummy (appID, commit_ID, permission_ID) values (3,1,3);
+insert into dummy (appID, commit_ID, permission_ID) values (3,2,1);
+
+select AppID, Commit_ID, Permission_ID from dummy;
