@@ -1,38 +1,34 @@
 public class pairList<L,R> {
 
-	private int appID;
-	private int commitID;
 	
-	public pairList(int appID, int commitID) {
+	private int commitID;
+	private String oldDate;
+	private String newDate;
+	
+	
+	public pairList(int commitID, String oldDate) {
 		super();
-		this.appID = appID;
 		this.commitID = commitID;
+		this.oldDate = oldDate;
 	}
-		
-	public int getAppID() {
-		return appID;
-	}
-	public void setAppID(int appID) {
-		this.appID = appID;
-	}
+	
 	public int getCommitID() {
 		return commitID;
 	}
 	public void setCommitID(int commitID) {
 		this.commitID = commitID;
 	}
+	public String getOldDate() {
+		return oldDate;
+	}
+	public void setOldDate(String oldDate) {
+		this.oldDate = oldDate;
+	}
+	public String getNewDate() {
+		return newDate;
+	}
+	public void setNewDate(String newDate) {
+		this.newDate = newDate;
+	}
 	
-	
-	/*
-	private L l;
-    private R r;
-    public pairList(L l, R r){
-        this.l = l;
-        this.r = r;
-    }
-    public L getL(){ return l; }
-    public R getR(){ return r; }
-    public void setL(L l){ this.l = l; }
-    public void setR(R r){ this.r = r; }
-    */
 }

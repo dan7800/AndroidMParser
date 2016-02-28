@@ -32,7 +32,6 @@ public class CommitAnalyzerSuper {
 	public static void main(String[] args) {
 		
 		CommitAnalyzerSuper cas = new CommitAnalyzerSuper();
-		// PrepDB(); // Prepare the database for inserting values
 		cas.buildChangeList();
 		
 	}
@@ -63,7 +62,7 @@ public class CommitAnalyzerSuper {
 		    	c.setAutoCommit(false);
 		
 		    	stmt = c.createStatement();
-		    	final String sqlAllApps="select * from ManifestPermissionCommitt_view where appID <11";
+		    	final String sqlAllApps="select * from ManifestPermissionCommitt_view";
 		  //  	final String sqlAllApps="select * from dummy"; // temp information
 		    	
 

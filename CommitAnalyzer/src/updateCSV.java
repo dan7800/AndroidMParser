@@ -42,12 +42,17 @@ public class updateCSV {
 		
 		    	stmt = c.createStatement();
 		  // 	final String sqlAllApps="select * from ManifestPermissionCommitt_view where appID =10";
-		    	final String sqlAllApps="select distinct commit_ID, appID  from ManifestPermissionCommitt_view where appid <14";
+		    //	final String sqlAllApps="select distinct commit_ID, appID  from ManifestPermissionCommitt_view where appid <14 order by appID, commit_ID";
+		    	
+		    	final String sqlAllApps="select * from Android_Manifest_CommitInfo where commit_ID =1";
+		    	
 		    	
 		    	ResultSet rsAllApps = stmt.executeQuery( sqlAllApps );	    	
 		    	 while (rsAllApps.next()) {
 		    		 // Build the list of all pair items
-		    		 pairList.add(new pairList(Integer.parseInt(rsAllApps.getString("appID")) ,Integer.parseInt(rsAllApps.getString("commit_ID"))));
+		
+		    		 pairList.add(new pairList(Integer.parseInt(rsAllApps.getString("commit_ID")) ,rsAllApps.getString("commit_Date")));
+			    	
 		    	 }
 			    stmt.close();
 			    rsAllApps.close();
@@ -60,33 +65,25 @@ public class updateCSV {
 				    }
 		
 		
-		// now loop through the list 
-		// System.out.println(pairList.size());
-		// showList();
+		// now loop through the list to update the dates
 		 
-		 int appID=-1;
-		 int orderCount=1;
 		 for (int i=0; i<pairList.size();i++){
-			 if(appID!=pairList.get(i).getAppID()){
-				 
-				// System.out.println(pairList.get(i).getAppID());
-				 
-				 appID=pairList.get(i).getAppID();
-				 updateValues(pairList.get(i).getAppID(),pairList.get(i).getCommitID(),orderCount);
-				 
-				 
-				 orderCount=1;
-			 }
+			 
+			 System.out.println("Dan");
 			 
 		 }
+			 
+}
+		 
+		 
+		private String getNewDate(String oldDate){
+			return "Dan";
+		}
+		 
 		 
 		 
 		
-		 
-		 
-		 
-		
-	}
+	
 	
 	
 	private void updateValues(int appID, int commitID, int orderCount){
@@ -104,7 +101,7 @@ public class updateCSV {
 
 			for (int i=0; i<pairList.size();i++){
 
-				System.out.println(pairList.get(i).getAppID() + " " + pairList.get(i).getCommitID());
+			//	System.out.println(pairList.get(i).getAppID() + " " + pairList.get(i).getCommitID());
 			}
 		}
 	
