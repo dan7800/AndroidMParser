@@ -62,7 +62,7 @@ public class CommitAnalyzerSuper {
 		    	c.setAutoCommit(false);
 		
 		    	stmt = c.createStatement();
-		    	final String sqlAllApps="select * from ManifestPermissionCommitt_view where appID = 10";
+		    	final String sqlAllApps="select * from ManifestPermissionCommitt_view";
 		  //  	final String sqlAllApps="select * from dummy"; // temp information
 		    	
 
