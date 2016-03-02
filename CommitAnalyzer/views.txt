@@ -45,11 +45,22 @@
 
 
 
+        %% get commiter/author count
+        drop view author_Count_view;
+        create view author_Count_view as 
+        select distinct(gh.appID) as appID, ac.authCount
+        from githistory gh
+        inner join (select count (distinct author) as authCount, appID from githistory group by appID) ac on ac.appID = gh.appID
+        order by gh.appID
+
+
+        %% Get the total number of commits for each author in an app
+
 
 
 %%% Get the proper order of all commits into the DB
 
-      drop view ManifestPermissionCommitt_view;
+    drop view ManifestPermissionCommitt_view;
     create view ManifestPermissionCommitt_view as  
     select  Permission_ID, gh.appID, author, email,  summary, ampj.commit_ID, commit_order,  commit_date, alteredDate
     from android_Manifest_permission_join ampj
@@ -70,7 +81,8 @@
     from Android_Manifest_Commit_Changes amcc
     inner join Android_Manifest_CommitInfo amc on amc.commit_ID = amcc.commitID
     inner join githistory gh on gh.commitID = amcc.commitID
-    order by altereddate
+    where altereddate is not null and altereddate!=''
+    order by altereddate;
 
 
 
@@ -83,7 +95,7 @@
     create view PermissionChange_FrequencyBase_view as 
     select pv.appID, pv.commitID, pv.PermissionID, pv.Action, cpv.author, cpv.email, cpv.authorCount, cpv.totalCommit, cpv.percentCommitter
     from PermissionChange_view  pv
-    inner join CommitterPercentage_view cpv on cpv.appID = pv.appid and cpv.author=pv.author
+    inner join CommitterPercentage_view cpv on cpv.appID = pv.appid and cpv.author=pv.author;
 
 
 
@@ -96,43 +108,68 @@
     order by permissionCount desc
 
 
+   
+
+
 
 
     % Get the permission rates of apps. Look at all commits for their lifecycle
 
     % First get the commit count
 
-      drop view CommitCount_view;
-    create view CommitCount_view as 
-    select cvb.appID as AppID, cvb.commit_ID as commitID, cvb.permissionCount as permissioncount, amc.altereddate as CommitDate, commitCount, amc.orderdate
+    drop view CommitCount_view;
+    create view CommitCount_view as  
+    select cvb.appID as AppID, cvb.commit_ID as commitID, cvb.permissionCount as permissioncount, amc.altereddate as CommitDate, commitCount, amc.orderdate, percentCommitter
     from Commit_view_backwards cvb
     inner join Android_Manifest_CommitInfo amc on amc.commit_ID = cvb.commit_ID
     inner join (select cvb.appID as AppID, count(commit_ID) as commitCount
     from Commit_view_backwards cvb
     group by appID) cc on cc.appID = cvb.appID
+    left join (select distinct(commitID) as commitID, percentCommitter from PermissionChange_FrequencyBase_view) pcv on pcv.commitID = cvb.commit_ID
     where commitCount >=25
-    order by appID, commitDate asc
+    and percentCommitter is not null
+    order by appID, commitDate asc;
 
     %% now get the commit counts for each
     select orderDate, round(avg(permissionCount),2) as PermissionCount, count(appID) as Apps
     from CommitCount_view
---    where commitCount >=50 -- No use since it is show above
+--    where commitCount >=50 -- No use since it is in the referenced view
     group by orderDate
     order by orderDate
 
 
+    %%% Get the overpermissions for each group
 
 
---select * from android_Manifest_permission_join
+    drop view overprivsVersions_view;
+    create view overprivsVersions_view as 
+    select v.versionID, v.appID, v.versionCounter , op.overprivCOunt
+    from version v
+    inner join (select count (permissionID) as overPrivCount, versionID from overpermission group by versionID) op on op.versionID = v.versionID
+    where v.isapkexists=1
+    order by v.appID, v.versionID, versionCOunter
+
+    %% get overpriv averages for each
+    select round(avg(overPrivCount),2) as overprivcount, versioncounter
+    from overprivsVersions_view
+    group by versionCounter
+    order by versioncounter
 
 
 
 
+%% Get the comparison of # of committers vs. Overprivs
 
 
-
-
---select * from android_Manifest_permission_join
+    select  overPrivCount, round(avg(authcount),2) as authCount, count(ov.appID) as appCount
+    from overprivsVersions_view ov
+    inner join (select * from author_Count_view) acv on acv.appID = ov.appID
+    where versionCounter=3
+    and authcount > 1
+    group by overPrivCount
+    order by overPrivCount
+    % Note: must still find apps with 0 overprivs, and need to normalize by the number of requested permissions
+    %%% This doesn't return a lot of records
 
 
 
