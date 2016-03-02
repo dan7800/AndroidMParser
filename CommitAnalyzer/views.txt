@@ -118,17 +118,15 @@
     % First get the commit count
 
     drop view CommitCount_view;
-    create view CommitCount_view as  
-    select cvb.appID as AppID, cvb.commit_ID as commitID, cvb.permissionCount as permissioncount, amc.altereddate as CommitDate, commitCount, amc.orderdate, percentCommitter
+    create view CommitCount_view as 
+    select cvb.appID as AppID, cvb.commit_ID as commitID, cvb.permissionCount as permissioncount, amc.altereddate as CommitDate, commitCount, amc.orderdate
     from Commit_view_backwards cvb
     inner join Android_Manifest_CommitInfo amc on amc.commit_ID = cvb.commit_ID
     inner join (select cvb.appID as AppID, count(commit_ID) as commitCount
     from Commit_view_backwards cvb
     group by appID) cc on cc.appID = cvb.appID
-    left join (select distinct(commitID) as commitID, percentCommitter from PermissionChange_FrequencyBase_view) pcv on pcv.commitID = cvb.commit_ID
     where commitCount >=25
-    and percentCommitter is not null
-    order by appID, commitDate asc;
+    order by appID, commitDate asc
 
     %% now get the commit counts for each
     select orderDate, round(avg(permissionCount),2) as PermissionCount, count(appID) as Apps
